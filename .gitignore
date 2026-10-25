@@ -1,0 +1,36 @@
+# Virtuelle Umgebung und Python-Cache
+venv/
+__pycache__/
+*.pyc
+
+# Heruntergeladene Piper-Stimmen (groß, werden automatisch geladen)
+voices/
+
+# Kostenprotokoll (lokale Nutzungsdaten)
+protokoll/
+
+# Sicherheitshalber: Schlüssel gehören nur in Umgebungsvariablen
+.env
+*.key
+
+# Einstellungen gehören zum jeweiligen Gerät
+einstellungen.json
+einstellungen.tmp
+persoenlichkeiten.json
+persoenlichkeiten.tmp
+kinder.json
+kinder.tmp
+
+# Lernkarteien je Kind (Lernfortschritt, lokal)
+lernstand/
+status.json
+status.tmp
+
+# Hörproben aus Vergleichen (groß, lokal)
+hoerproben/
+
+# Zwischengespeicherte Hörproben der Oberfläche
+cache/
+
+# Sticker-Alben je Kind (lokal)
+sticker/

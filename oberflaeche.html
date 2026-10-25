@@ -1,0 +1,1606 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c1c1b" media="(prefers-color-scheme: dark)">
+<title>Pixel</title>
+<style>
+:root {
+  --bg: #f6f5f1; --karte: #ffffff; --flaeche: #efede6; --text: #1f1e1c; --leise: #6b6a65; --linie: #e2e0d8;
+  --akzent: #185fa5; --akzent-bg: #e6f1fb; --gut: #3b6d11; --gut-bg: #eaf3de; --warn: #854f0b; --warn-bg: #faeeda;
+  --schlecht: #a32d2d; --schlecht-bg: #fcebeb; --balken: #378add;
+  --reihe-1: #2a78d6; --reihe-2: #eb6834; --reihe-3: #1baf7a; --reihe-4: #eda100;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1c1b; --karte: #262624; --flaeche: #30302d; --text: #ecebe6; --leise: #a3a29c; --linie: #3a3a37;
+    --akzent: #85b7eb; --akzent-bg: #0c447c; --gut: #c0dd97; --gut-bg: #27500a; --warn: #fac775; --warn-bg: #633806;
+    --schlecht: #f7c1c1; --schlecht-bg: #791f1f; --balken: #85b7eb;
+    --reihe-1: #3987e5; --reihe-2: #d95926; --reihe-3: #199e70; --reihe-4: #c98500;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+       -webkit-text-size-adjust: 100%; }
+main { max-width: 560px; margin: 0 auto; padding: 16px 16px 120px; }
+h1 { font-size: 22px; font-weight: 600; margin: 0; }
+h2 { font-size: 17px; font-weight: 600; margin: 0 0 12px; }
+.kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 0 16px; }
+.karte { background: var(--karte); border: 1px solid var(--linie); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+.zustand { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 14px; font-weight: 500;
+           background: var(--flaeche); color: var(--leise); }
+.zustand.wartet, .zustand.hoert_zu, .zustand.antwortet, .zustand.spricht, .zustand.spielt { background: var(--gut-bg); color: var(--gut); }
+.zustand.pausiert { background: var(--warn-bg); color: var(--warn); }
+.zustand.aus { background: var(--schlecht-bg); color: var(--schlecht); }
+.raster { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wert { background: var(--flaeche); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.wert small { display: block; color: var(--leise); font-size: 13px; }
+.wert b { display: block; font-size: 21px; font-weight: 600; }
+.wert span { color: var(--leise); font-size: 13px; }
+.balken { height: 6px; border-radius: 3px; background: var(--linie); overflow: hidden; margin-top: 6px; }
+.balken i { display: block; height: 100%; background: var(--balken); }
+.balken i.voll { background: var(--schlecht); }
+.hinweis { font-size: 14px; color: var(--leise); margin: 8px 0 0; }
+.meldung { padding: 10px 12px; border-radius: 10px; font-size: 14px; margin: 0 0 12px; }
+.meldung.warn { background: var(--warn-bg); color: var(--warn); }
+.meldung.fehler { background: var(--schlecht-bg); color: var(--schlecht); }
+.meldung.gut { background: var(--gut-bg); color: var(--gut); }
+.feld { margin-bottom: 18px; }
+.feld:last-child { margin-bottom: 0; }
+.feld label, .feld .titel { display: flex; justify-content: space-between; gap: 8px; font-weight: 500; margin-bottom: 6px; }
+.feld label output { color: var(--akzent); font-weight: 600; }
+.feld .erklaerung { font-size: 13px; color: var(--leise); margin-top: 4px; }
+.feld .fehlertext { font-size: 13px; color: var(--schlecht); margin-top: 4px; }
+select, input[type=number], input[type=time], input[type=password], input[type=text] {
+  width: 100%; font: inherit; color: var(--text); background: var(--karte); border: 1px solid var(--linie);
+  border-radius: 10px; padding: 10px 12px; min-height: 44px; }
+input[type=range] { width: 100%; accent-color: var(--akzent); min-height: 32px; }
+.zeile { display: flex; gap: 10px; align-items: center; }
+.zeile > * { flex: 1; }
+.feld label.schalter { display: flex; justify-content: flex-start; align-items: center; gap: 10px; font-weight: 500;
+                       margin-bottom: 8px; }
+.schalter input { width: 22px; height: 22px; accent-color: var(--akzent); }
+button { font: inherit; font-weight: 500; border-radius: 10px; min-height: 44px; padding: 10px 16px; cursor: pointer;
+         border: 1px solid var(--linie); background: var(--karte); color: var(--text); }
+button.haupt { background: var(--akzent); color: #fff; border-color: var(--akzent); width: 100%; }
+@media (prefers-color-scheme: dark) { button.haupt { color: #042c53; } }
+button.klein { min-height: 36px; padding: 6px 12px; font-size: 14px; }
+.leiste { position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+          background: var(--bg); border-top: 1px solid var(--linie); display: none; }
+.leiste.sichtbar { display: block; }
+.leiste div { max-width: 560px; margin: 0 auto; display: flex; gap: 10px; }
+.leiste .haupt { flex: 2; }
+.leiste button:not(.haupt) { flex: 1; }
+#anmeldung { max-width: 360px; margin: 18vh auto 0; text-align: center; }
+#anmeldung p { color: var(--leise); }
+.versteckt { display: none !important; }
+textarea { width: 100%; font: 14px/1.45 ui-monospace, "Cascadia Mono", Consolas, monospace; color: var(--text);
+           background: var(--karte); border: 1px solid var(--linie); border-radius: 10px; padding: 10px 12px;
+           min-height: 260px; resize: vertical; }
+.zeile-klein { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px;
+               font-size: 13px; color: var(--leise); }
+.marke { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--flaeche); color: var(--leise); }
+.marke.eigen { background: var(--akzent-bg); color: var(--akzent); }
+.probe { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.probe span { font-size: 13px; color: var(--leise); }
+.tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 3px; background: var(--flaeche);
+        border-radius: 10px; padding: 3px; margin-bottom: 14px; }
+.tabs button { border: 0; background: transparent; min-height: 38px; color: var(--leise); padding: 2px 4px; font-size: 14px;
+               line-height: 1.2; hyphens: manual; overflow-wrap: normal; }
+.tabs button[aria-pressed=true] { background: var(--karte); color: var(--text); box-shadow: 0 0 0 1px var(--linie); }
+.thema { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-top: 1px solid var(--linie); }
+.thema .name { flex: 1; min-width: 0; }
+.thema .name small { display: block; color: var(--leise); font-size: 12px; }
+.thema .stand { font-size: 13px; color: var(--leise); white-space: nowrap; }
+.thema .stand.gekonnt { color: var(--gut); }
+.thema .stand.aktuell { color: var(--text); font-weight: 600; }
+.anleitung p, .anleitung li { font-size: 15px; line-height: 1.5; }
+.anleitung ol, .anleitung ul { padding-left: 20px; margin: 6px 0 12px; }
+.anleitung h3 { font-size: 15px; margin: 16px 0 4px; }
+.anleitung td:first-child { font-weight: 500; padding-right: 10px; width: 42%; }
+.anleitung td { vertical-align: top; }
+.anleitung .sagen { font-style: italic; }
+.anleitung pre.befehl { background: var(--flaeche); border-radius: 8px; padding: 10px; font-size: 13px; white-space: pre-wrap;
+                        overflow-wrap: anywhere; margin: 6px 0 12px; }
+.album { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; margin-top: 10px; }
+.album div { background: var(--flaeche); border-radius: 10px; padding: 8px 4px; text-align: center; font-size: 12px; }
+.album div b { display: block; font-size: 30px; font-weight: normal; line-height: 1.2; }
+.album div.gold { box-shadow: 0 0 0 2px #d4a017 inset; background: #fff6d6; color: #5a4300; }
+.eins { border-collapse: separate; border-spacing: 2px; font-size: 11px; margin-top: 6px; }
+.eins td, .eins th { width: 9%; text-align: center; padding: 4px 0; border: 0; border-radius: 4px; }
+.eins th { color: var(--leise); font-weight: 500; }
+.eins .f0 { background: var(--flaeche); color: var(--leise); }
+.eins .f1 { background: #f6c9c3; color: #5c1a12; } .eins .f2 { background: #f8dfb4; color: #5a3a00; }
+.eins .f3 { background: #f2eda9; color: #4a4300; } .eins .f4 { background: #c8e8b8; color: #1e4a10; }
+.eins .f5 { background: #8fd17a; color: #0e3504; }
+.umschalter { display: flex; background: var(--flaeche); border-radius: 10px; padding: 3px; margin-bottom: 14px; }
+.umschalter button { flex: 1; border: 0; background: transparent; min-height: 38px; color: var(--leise); }
+.umschalter button[aria-pressed=true] { background: var(--karte); color: var(--text); box-shadow: 0 0 0 1px var(--linie); }
+.legende { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--leise); margin-bottom: 10px; }
+.legende span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px;
+                        margin-right: 6px; vertical-align: -1px; background: var(--farbe); }
+.diagramm { position: relative; height: 160px; display: flex; align-items: flex-end; gap: 2px;
+            border-bottom: 1px solid var(--linie); padding-top: 18px; }
+.diagramm .gitter { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--linie); font-size: 11px;
+                    color: var(--leise); pointer-events: none; }
+.diagramm .gitter span { position: absolute; right: 0; top: -16px; background: var(--karte); padding-left: 4px; }
+.saeule { flex: 1; height: 100%; display: flex; flex-direction: column-reverse; gap: 2px; cursor: pointer;
+          background: transparent; border: 0; padding: 0; min-height: 0; border-radius: 0; min-width: 0; }
+.saeule i { display: block; width: 100%; flex: none; }
+.saeule i:last-child { border-radius: 4px 4px 0 0; }
+.saeule.aktiv { background: var(--flaeche); }
+.achse { display: flex; justify-content: space-between; font-size: 11px; color: var(--leise); margin-top: 4px; }
+.info { font-size: 14px; min-height: 42px; margin-top: 8px; color: var(--leise); }
+.stapel { display: flex; gap: 2px; height: 16px; margin: 6px 0 10px; }
+.stapel i { display: block; height: 100%; }
+.stapel i:first-child { border-radius: 4px 0 0 4px; }
+.stapel i:last-child { border-radius: 0 4px 4px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-weight: 500; color: var(--leise); font-size: 13px; padding: 4px 0; }
+td { padding: 6px 0; border-top: 1px solid var(--linie); }
+td.zahl, th.zahl { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<main id="anmeldung" class="versteckt">
+  <h1>Pixel</h1>
+  <p>Eltern-PIN eingeben</p>
+  <form id="anmeldeformular" class="karte">
+    <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" aria-label="Eltern-PIN" required>
+    <p id="anmeldefehler" class="meldung fehler versteckt" style="margin-top:12px"></p>
+    <button class="haupt" type="submit" style="margin-top:12px">Anmelden</button>
+  </form>
+</main>
+
+<main id="seite" class="versteckt">
+  <div class="kopf">
+    <h1>Pixel</h1>
+    <span id="zustand" class="zustand">…</span>
+    <button class="klein" id="abmelden" type="button">Abmelden</button>
+  </div>
+
+  <nav class="tabs" aria-label="Bereiche">
+    <button type="button" data-ansicht="uebersicht" aria-pressed="true">Übersicht</button>
+    <button type="button" data-ansicht="profile" aria-pressed="false">Profile</button>
+    <button type="button" data-ansicht="lernen" aria-pressed="false">Lernen</button>
+    <button type="button" data-ansicht="persoenlichkeiten" aria-pressed="false">Persönlich&shy;keiten</button>
+    <button type="button" data-ansicht="einstellungen" aria-pressed="false">Einstellungen</button>
+    <button type="button" data-ansicht="auswertung" aria-pressed="false">Auswertung</button>
+    <button type="button" data-ansicht="anleitung" aria-pressed="false">Anleitung</button>
+  </nav>
+
+  <div id="bereich_uebersicht">
+  <section class="karte" data-tab="uebersicht">
+    <p id="nichtlaeuft" class="meldung warn versteckt">Das Gesprächsprogramm läuft gerade nicht. Änderungen werden beim nächsten Start übernommen.</p>
+    <p id="abweichung" class="meldung warn versteckt"></p>
+    <div class="raster">
+      <div class="wert"><small>Kosten heute</small><b id="kosten">–</b><span id="kostenlimit"></span>
+        <div class="balken"><i id="kostenbalken" style="width:0"></i></div></div>
+      <div class="wert"><small>Fragen heute</small><b id="fragen">–</b><span id="fragenlimit"></span></div>
+      <div class="wert"><small>Wartezeit (Median)</small><b id="wartezeit">–</b><span id="wartezeitletzte"></span></div>
+      <div class="wert"><small>Persönlichkeit</small><b id="laeuftmodell" style="font-size:16px">–</b><span id="laeuftstimme"></span></div>
+    </div>
+    <p id="freimenge" class="hinweis versteckt"></p>
+  </section>
+
+  <form id="formular">
+    <section class="karte" data-tab="uebersicht" data-kinder>
+      <h2>Diese Woche</h2>
+      <p class="hinweis" style="margin:0 0 8px">Letzte 7 Tage, in Klammern die Woche davor.</p>
+      <div id="wochenbericht"></div>
+    </section>
+
+    <section class="karte" data-tab="uebersicht">
+      <h2>Gerade aktiv</h2>
+      <div class="feld">
+        <label for="kind">Wer spricht gerade mit Pixel?</label>
+        <select id="kind" name="kind"></select>
+        <div class="erklaerung">Die Kinder melden sich auch selbst an: „Ich bin …“. Nach 30 Minuten ohne Gespräch ist niemand mehr angemeldet.</div>
+        <div class="fehlertext" data-fehler="kind"></div>
+      </div>
+      <div class="feld">
+        <label for="persoenlichkeit">Persönlichkeit</label>
+        <select id="persoenlichkeit" name="persoenlichkeit"></select>
+        <div class="erklaerung">Wechsel auch per Sprache, z. B. „Sei Deutsch-Pixel“ oder „Persönlichkeit Pirat“. Das Gespräch geht dabei weiter.</div>
+        <div class="fehlertext" data-fehler="persoenlichkeit"></div>
+      </div>
+    </section>
+
+    <section class="karte" data-tab="profile">
+      <h2>Kinder und Erwachsene</h2>
+      <div class="feld">
+        <div class="erklaerung" style="margin-top:0">Die Kinder melden sich auch selbst an: „Ich bin …“ oder „Hier ist …“. Pixel begrüßt sie dann mit Namen. An Claude geht nur die Klasse, nie der Name. Nach 30 Minuten ohne Gespräch ist niemand mehr angemeldet. Erwachsene wählen bei der Klasse „Erwachsen (Hochschulniveau)“: Pixel antwortet dann auf Hochschulniveau und etwas ausführlicher, ohne Schlafenszeit. Auch Erwachsene melden sich per Sprache an, das können Kinder ebenfalls sagen. Sprechpause automatisch: 1,6 s bis Klasse 2, sonst wie unter „Einstellungen“.</div>
+      </div>
+      <div id="kinderliste" data-kinder></div>
+      <div class="feld" data-kinder>
+        <div class="titel">Kind hinzufügen</div>
+        <div class="zeile">
+          <input type="text" id="k_neu_name" maxlength="30" autocomplete="off" placeholder="Name" aria-label="Name des Kindes">
+          <select id="k_neu_klasse" aria-label="Klasse"></select>
+        </div>
+        <button type="button" class="klein" id="k_neu" style="margin-top:8px">Hinzufügen</button>
+        <div class="fehlertext" id="k_neu_fehler"></div>
+      </div>
+    </section>
+
+    <section class="karte" data-kinder data-tab="lernen">
+      <div class="kopf" style="margin:0">
+        <h2 style="margin:0">Lernstand</h2>
+        <select id="lp_kind" style="width:auto;flex:1;max-width:55%" aria-label="Kind"></select>
+      </div>
+      <p class="hinweis" id="lp_leer" style="margin:8px 0 0">Noch kein Kind angelegt.</p>
+      <p class="hinweis" style="margin:8px 0 0">Geübt wird mit Mister Pixel (Englisch), Professor Pixel (Mathe), Deutsch-Pixel und Sachkunde-Pixel (HSU), nach dem LehrplanPLUS Bayern. Die Kinder suchen sich Thema und Schwierigkeit selbst aus. Ein Thema gilt als geschafft, wenn von den letzten Aufgaben mindestens 80 % richtig waren (mindestens 5).</p>
+    </section>
+
+    <section class="karte" data-kinder data-tab="lernen" id="album_karte">
+      <h2>Sticker-Album</h2>
+      <div class="raster">
+        <div class="wert"><small>Sticker</small><b id="al_anzahl">–</b><span id="al_verschieden"></span></div>
+        <div class="wert"><small>Richtig heute</small><b id="al_heute">–</b><span id="al_rekord"></span></div>
+      </div>
+      <div class="album" id="al_sticker"></div>
+      <p class="hinweis" style="margin:10px 0 0">Für jedes geschaffte Thema gibt es einen Tier-Sticker, golden, wenn es auch auf „schwer“ sitzt. In Englisch gibt es für je 10 gekonnte Wörter einen. Die Kinder fragen „Wie viele Sticker habe ich?“.</p>
+    </section>
+
+    <section class="karte" data-kinder data-tab="lernen" id="lernstand_karte">
+      <h2>Englisch</h2>
+      <div id="lp_inhalt" class="versteckt">
+        <div class="raster" style="margin-bottom:12px">
+          <div class="wert"><small>Stufe</small><b id="lp_stufe">–</b><span id="lp_stufe_name"></span></div>
+          <div class="wert"><small>Heute fällig</small><b id="lp_faellig">–</b><span id="lp_gekonnt"></span></div>
+        </div>
+        <p class="hinweis" id="lp_pflicht" style="margin:0 0 12px"></p>
+        <div class="feld">
+          <label>Thema und Schwierigkeit</label>
+          <div class="zeile"><select id="lp_thema" aria-label="Thema"></select><select id="lp_niveau" aria-label="Schwierigkeit"></select></div>
+          <div class="erklaerung">Das Kind wählt selbst: „Ich will Tiere üben“, „Mach es schwerer“. „Gemischt“ übt alle Wörter der Stufe.</div>
+        </div>
+        <details style="margin-bottom:12px"><summary>Stand je Thema</summary><table><tbody id="lp_themen"></tbody></table></details>
+        <div id="lp_stufen"></div>
+        <div class="feld">
+          <label for="lp_stufe_wahl">Stufe von Hand setzen</label>
+          <div class="zeile"><select id="lp_stufe_wahl"></select>
+            <button type="button" class="klein" id="lp_stufe_setzen" style="flex:0">Setzen</button></div>
+          <div class="erklaerung">Normalerweise steigt Pixel selbst auf, wenn 80 % einer Stufe gekonnt sind (ab Fach 4 der Lernkartei).</div>
+        </div>
+        <div class="feld">
+          <div class="titel">Schwierige Wörter</div>
+          <table><tbody id="lp_schwierig"></tbody></table>
+        </div>
+        <details>
+          <summary id="lp_alle_titel">Alle geübten Wörter</summary>
+          <table><thead><tr><th>Englisch</th><th>Deutsch</th><th class="zahl">Fach</th><th class="zahl">wieder ab</th><th></th></tr></thead>
+            <tbody id="lp_karten"></tbody></table>
+          <p class="hinweis">„Neu“ setzt ein Wort zurück, Pixel führt es dann wieder als neues Wort ein.</p>
+        </details>
+      </div>
+    </section>
+
+    <div id="themen_karten" data-kinder data-tab="lernen"></div>
+
+    <section class="karte" data-tab="lernen" data-kinder>
+      <h2>Tagesziel</h2>
+      <div class="feld">
+        <label for="tagesziel">Richtige Aufgaben am Tag</label>
+        <input type="number" id="tagesziel" name="tagesziel" min="0" max="200" step="1" inputmode="numeric">
+        <div class="erklaerung">So viele richtige Aufgaben am Tag (alle Fächer zusammen), dann gratuliert Pixel. 0 = aus. Der Wochenbericht in der Übersicht zählt, an wie vielen Tagen das Ziel erreicht wurde.</div>
+        <div class="fehlertext" data-fehler="tagesziel"></div>
+      </div>
+    </section>
+
+    <section class="karte" data-tab="persoenlichkeiten">
+      <div class="kopf" style="margin:0 0 6px">
+        <h2 style="margin:0">Bearbeiten</h2>
+        <select id="p_auswahl" style="width:auto;flex:1;max-width:60%" aria-label="Persönlichkeit zum Bearbeiten"></select>
+      </div>
+      <p class="hinweis" id="p_hinweis" style="margin:0 0 12px"></p>
+      <div class="zeile" style="margin-bottom:18px">
+        <button type="button" class="klein" id="p_neu">Kopie anlegen</button>
+        <button type="button" class="klein" id="p_loeschen">Löschen</button>
+      </div>
+      <div class="feld">
+        <label for="p_name">Name</label>
+        <input type="text" id="p_name" maxlength="40" autocomplete="off">
+        <div class="fehlertext" data-fehler="p_name"></div>
+      </div>
+      <div class="feld">
+        <label class="schalter"><input type="checkbox" id="p_per_sprache"> Per Sprache wählbar</label>
+        <input type="text" id="p_woerter" autocomplete="off" aria-label="Wörter für den Sprachbefehl">
+        <div class="erklaerung">Weitere Wörter, an denen Pixel diese Persönlichkeit erkennt, mit Komma getrennt (der Name zählt immer).</div>
+        <div class="fehlertext" data-fehler="p_woerter"></div><div class="fehlertext" data-fehler="p_per_sprache"></div>
+      </div>
+      <div class="feld">
+        <label for="p_beschreibung">Wofür ist sie da?</label>
+        <input type="text" id="p_beschreibung" maxlength="120" autocomplete="off" placeholder="z. B. Englisch üben">
+        <div class="erklaerung">Die anderen Persönlichkeiten schlagen sie vor, wenn ein Kind so etwas möchte.</div>
+        <div class="fehlertext" data-fehler="p_beschreibung"></div>
+      </div>
+      <div class="feld">
+        <label for="p_bestaetigung">Antwort auf das Wake Word</label>
+        <input type="text" id="p_bestaetigung" maxlength="40" autocomplete="off">
+        <div class="erklaerung">Z. B. „Ja?“ oder „Ahoi?“. Leer = nur ein kurzer Ton.</div>
+        <div class="fehlertext" data-fehler="p_bestaetigung"></div>
+      </div>
+      <div class="feld">
+        <label for="p_vorstellung">Satz beim Wechsel</label>
+        <input type="text" id="p_vorstellung" maxlength="300" autocomplete="off">
+        <div class="erklaerung">Spricht Pixel, wenn per Sprache zu dieser Persönlichkeit gewechselt wird.</div>
+        <div class="fehlertext" data-fehler="p_vorstellung"></div>
+      </div>
+
+      <h2 style="margin-top:22px">Gespräche</h2>
+      <div class="feld">
+        <label for="p_modell">Sprachmodell</label>
+        <select id="p_modell"></select>
+        <div class="erklaerung" id="p_modell_info"></div>
+        <div class="fehlertext" data-fehler="p_modell"></div>
+      </div>
+      <div class="feld">
+        <label for="p_stimme">Stimme</label>
+        <select id="p_stimme"></select>
+        <div class="probe"><button type="button" class="klein" data-probe="p_stimme">Anhören</button><span data-probe-text="p_stimme"></span></div>
+        <div class="erklaerung" id="p_stimme_info"></div>
+        <div class="fehlertext" data-fehler="p_stimme"></div>
+      </div>
+      <div class="feld">
+        <label for="p_stimme_englisch">Stimme für Englisch</label>
+        <select id="p_stimme_englisch"></select>
+        <div class="probe"><button type="button" class="klein" data-probe="p_stimme_englisch">Anhören</button><span data-probe-text="p_stimme_englisch"></span></div>
+        <div class="erklaerung" id="p_stimme_englisch_info"></div>
+        <div class="fehlertext" data-fehler="p_stimme_englisch"></div>
+      </div>
+      <div class="feld">
+        <label for="p_erkennung">Spracherkennung</label>
+        <select id="p_erkennung">
+          <option value="de">Nur Deutsch</option>
+          <option value="multi">Deutsch und Englisch gemischt</option>
+        </select>
+        <div class="erklaerung">Gemischt versteht auch englische Antworten des Kindes, kostet etwa ein Fünftel mehr (ca. 0,09 statt 0,07 US-Cent pro 10 Sekunden Sprechen).</div>
+        <div class="fehlertext" data-fehler="p_erkennung"></div>
+      </div>
+      <div class="feld">
+        <label for="p_lernplan">Lernplan</label>
+        <select id="p_lernplan">
+          <option value="">Kein Lernplan</option>
+          <option value="englisch">Englisch, mit Lernkartei je Kind</option>
+          <option value="mathe">Mathematik, Themen nach Klasse</option>
+          <option value="deutsch">Deutsch, Themen nach Klasse</option>
+          <option value="hsu">Heimat- und Sachunterricht, Themen nach Klasse</option>
+        </select>
+        <div class="erklaerung">Mit Lernplan übt diese Persönlichkeit passend zur Klasse des angemeldeten Kindes und merkt sich, was es kann (Tab Lernen). Für Englisch müssen die Anweisungen dazu passen (siehe Mister Pixel), bei den anderen Fächern kommen die Regeln automatisch dazu.</div>
+        <div class="fehlertext" data-fehler="p_lernplan"></div>
+      </div>
+      <div class="feld">
+        <label class="schalter"><input type="checkbox" id="p_gute_nacht"> Gute-Nacht-Geschichten</label>
+        <div class="erklaerung">An: „Erzähl mir eine Geschichte“ startet eine ruhige Gute-Nacht-Geschichte, danach wartet Pixel wieder auf das Wake Word. Aus: Die Bitte gehört zum normalen Gespräch (z. B. bei Zuhör-Pixel, der selbst Texte vorliest).</div>
+      </div>
+      <div class="feld">
+        <label class="schalter"><input type="checkbox" id="p_spielzeit"> Lernen wird bewertet (Sticker)</label>
+        <div class="erklaerung">An: Pixel bewertet Antworten auf seine Aufgaben, das angemeldete Kind sammelt Sticker, Serien und das Tagesziel. Ob eine Antwort richtig ist, entscheidet Claude.</div>
+      </div>
+      <div class="feld">
+        <label for="p_lautstaerke">Lautstärke <output id="p_lautstaerke_wert"></output></label>
+        <input type="range" id="p_lautstaerke" min="1" max="6" step="1">
+        <div class="fehlertext" data-fehler="p_lautstaerke"></div>
+      </div>
+      <p class="meldung warn">In den Anweisungen stehen auch die Sicherheitsregeln für die Kinder (gefährliche Themen, Eltern fragen, keine privaten Daten). Bitte nur bewusst ändern.</p>
+      <div class="feld">
+        <label for="p_system_prompt">Anweisungen an Claude <span class="marke" id="p_system_prompt_marke"></span></label>
+        <textarea id="p_system_prompt" spellcheck="false"></textarea>
+        <div class="zeile-klein"><span id="p_system_prompt_zaehler"></span>
+          <button type="button" class="klein" data-standard="p_system_prompt">Standard wiederherstellen</button></div>
+        <div class="fehlertext" data-fehler="p_system_prompt"></div>
+      </div>
+
+      <h2 style="margin-top:22px">Gute-Nacht-Geschichten</h2>
+      <p class="hinweis" style="margin:-6px 0 14px">Auf „Erzähl mir eine Gute-Nacht-Geschichte“ erzählt Pixel etwa drei Minuten lang, auch mit Wunschthema.</p>
+      <div class="feld">
+        <label for="p_modell_geschichte">Sprachmodell</label>
+        <select id="p_modell_geschichte"></select>
+        <div class="erklaerung">Sonnet erzählt abwechslungsreicher, ca. 1,4 Cent pro Geschichte. Haiku ca. 0,06 Cent.</div>
+        <div class="fehlertext" data-fehler="p_modell_geschichte"></div>
+      </div>
+      <div class="feld">
+        <label for="p_stimme_geschichte">Stimme</label>
+        <select id="p_stimme_geschichte"></select>
+        <div class="probe"><button type="button" class="klein" data-probe="p_stimme_geschichte">Anhören</button><span data-probe-text="p_stimme_geschichte"></span></div>
+        <div class="erklaerung" id="p_stimme_geschichte_info"></div>
+        <div class="fehlertext" data-fehler="p_stimme_geschichte"></div>
+      </div>
+      <div class="feld">
+        <label for="p_geschichten_prompt">Anweisungen für Geschichten <span class="marke" id="p_geschichten_prompt_marke"></span></label>
+        <textarea id="p_geschichten_prompt" spellcheck="false"></textarea>
+        <div class="zeile-klein"><span id="p_geschichten_prompt_zaehler"></span>
+          <button type="button" class="klein" data-standard="p_geschichten_prompt">Standard wiederherstellen</button></div>
+        <div class="fehlertext" data-fehler="p_geschichten_prompt"></div>
+      </div>
+      <p class="hinweis">Gilt ab der nächsten Frage bzw. Geschichte. Ein laufendes Gespräch behält seinen bisherigen Verlauf.</p>
+    </section>
+
+    <section class="karte" data-tab="einstellungen">
+      <h2>Zuhören</h2>
+      <div class="feld">
+        <label for="pause">Sprechpause bis zur Antwort <output id="pause_wert"></output></label>
+        <input type="range" id="pause" name="pause" min="0.5" max="3" step="0.1">
+        <div class="erklaerung">Länger, wenn Kinder beim Sprechen oft nachdenken. Kürzer antwortet schneller.</div>
+        <div class="fehlertext" data-fehler="pause"></div>
+      </div>
+      <div class="feld">
+        <label for="folge">Zeit für Folgefragen <output id="folge_wert"></output></label>
+        <input type="range" id="folge" name="folge" min="0" max="30" step="1">
+        <div class="erklaerung">So lange kann nach einer Antwort ohne Wake Word weitergefragt werden. 0 = aus.</div>
+        <div class="fehlertext" data-fehler="folge"></div>
+      </div>
+      <div class="feld">
+        <label for="wakeword">Wake Word</label>
+        <select id="wakeword" name="wakeword"></select>
+        <div class="erklaerung">Damit wird Pixel angesprochen. Gilt ab dem nächsten Warten auf das Wake Word.</div>
+        <div class="fehlertext" data-fehler="wakeword"></div>
+      </div>
+      <div class="feld">
+        <label for="ww_schwelle">Wake-Word-Empfindlichkeit <output id="ww_schwelle_wert"></output></label>
+        <input type="range" id="ww_schwelle" name="ww_schwelle" min="0.05" max="0.95" step="0.05">
+        <div class="erklaerung">Niedriger reagiert leichter, aber auch öfter aus Versehen.</div>
+        <div class="fehlertext" data-fehler="ww_schwelle"></div>
+      </div>
+    </section>
+
+    <section class="karte" data-tab="einstellungen">
+      <h2>Grenzen</h2>
+      <div class="feld">
+        <label class="schalter"><input type="checkbox" id="schlaf_an"> Schlafenszeit</label>
+        <div class="zeile">
+          <input type="time" id="schlaf_von" aria-label="Schlafenszeit von">
+          <span style="flex:0">bis</span>
+          <input type="time" id="schlaf_bis" aria-label="Schlafenszeit bis">
+        </div>
+        <div class="erklaerung">In dieser Zeit antwortet Pixel nur mit „Gute Nacht“.</div>
+        <div class="fehlertext" data-fehler="schlafenszeit"></div>
+      </div>
+      <div class="feld">
+        <label class="schalter"><input type="checkbox" id="geschichte_an"> Noch eine Geschichte in der Schlafenszeit</label>
+        <div class="zeile"><span style="flex:0;white-space:nowrap">erlaubt bis</span><input type="time" id="geschichte_zeit" aria-label="Geschichte erlaubt bis"></div>
+        <div class="erklaerung">Zu Beginn der Schlafenszeit ist bis zu dieser Uhrzeit noch genau eine Geschichte erlaubt, sonst nur „Gute Nacht“.</div>
+        <div class="fehlertext" data-fehler="geschichte_bis"></div>
+      </div>
+      <div class="feld">
+        <label for="tageslimit_cent">Kostenlimit pro Tag (US-Cent)</label>
+        <input type="number" id="tageslimit_cent" name="tageslimit_cent" min="0" step="1" inputmode="decimal">
+        <div class="erklaerung">Claude, Spracherkennung und Stimme zusammen. 0 = kein Limit.</div>
+        <div class="fehlertext" data-fehler="tageslimit_cent"></div>
+      </div>
+      <div class="feld">
+        <label for="max_fragen">Fragen pro Tag</label>
+        <input type="number" id="max_fragen" name="max_fragen" min="0" step="1" inputmode="numeric">
+        <div class="erklaerung">0 = kein Limit.</div>
+        <div class="fehlertext" data-fehler="max_fragen"></div>
+      </div>
+      <div class="feld">
+        <label for="tageslimit_cent_erwachsene">Kostenlimit Erwachsene pro Tag (US-Cent)</label>
+        <input type="number" id="tageslimit_cent_erwachsene" name="tageslimit_cent_erwachsene" min="0" step="1" inputmode="decimal">
+        <div class="erklaerung">Gilt für Profile „Erwachsen (Hochschulniveau)“ statt der Grenzen oben. Für Erwachsene gibt es keine Schlafenszeit und keine Fragengrenze. 0 = kein Limit.</div>
+        <div class="fehlertext" data-fehler="tageslimit_cent_erwachsene"></div>
+      </div>
+    </section>
+    <p class="hinweis" style="text-align:center" data-tab="uebersicht profile lernen persoenlichkeiten einstellungen">Änderungen gelten ab der nächsten Frage.</p>
+  </form>
+
+  <div class="anleitung" data-tab="anleitung">
+    <section class="karte">
+      <h2>So spricht man mit Pixel</h2>
+      <ol>
+        <li>„<span class="sagen">Hey Pixel</span>“ sagen. Pixel antwortet mit „Ja?“ (je nach Persönlichkeit auch „Ahoi?“ oder ein kurzer Ton).</li>
+        <li>Frage oder Antwort sprechen. Sobald du kurz still bist, denkt Pixel nach und antwortet.</li>
+        <li><b>Aufsteigender Ton</b> nach der Antwort: Du kannst direkt weiterreden, ohne „Hey Pixel“ (etwa <span data-wert="folge"></span> Sekunden lang).</li>
+        <li><b>Absteigender Ton</b>: Das Gespräch ist zu Ende. Pixel wartet wieder auf „Hey Pixel“.</li>
+      </ol>
+      <p>Während Pixel spricht, hört er nicht zu. Erst nach dem Ton antworten. Nach 5 Minuten Pause beginnt ein neues Gespräch.</p>
+      <h3>Wer spricht?</h3>
+      <p>Jedes Kind meldet sich mit „<span class="sagen">Ich bin Anna</span>“ an (auch „Hier ist …“, „Ich heiße …“), gern auch zusammen mit einer Frage: „<span class="sagen">Ich bin Anna. Ich will Mathe üben.</span>“. Pixel kennt dann die Klasse und den Lernstand. Nach 30 Minuten ohne Gespräch ist niemand mehr angemeldet. Erwachsene melden sich genauso an und bekommen Antworten auf Hochschulniveau.</p>
+      <h3>Datenschutz</h3>
+      <p>„Hey Pixel“ wird nur auf diesem Rechner erkannt. Erst danach geht die Aufnahme bis zur Sprechpause zur Spracherkennung (Deepgram), der Text zu Claude. Namen ersetzt Pixel vorher durch [Name], an Claude geht nur die Klasse. In den Protokollen und im Lernstand stehen nur Zahlen (Kosten, Wartezeiten, richtig oder falsch). Nur die Programmausgabe im Fenster (zur Fehlersuche) zeigt Fragen und Antworten.</p>
+    </section>
+
+    <section class="karte">
+      <h2>Lernen</h2>
+      <p>Für jedes Fach gibt es eine eigene Persönlichkeit. Am einfachsten sagt das Kind, was es üben will: „<span class="sagen">Ich will Mathe üben</span>“, „<span class="sagen">Lass uns Englisch machen</span>“. Pixel wechselt dann von selbst. Oder ausdrücklich: „<span class="sagen">Sei Deutsch-Pixel</span>“.</p>
+      <table><tbody id="anl_lernen"></tbody></table>
+      <h3>So merkt sich Pixel, was das Kind kann</h3>
+      <ul>
+        <li><b>Mathe, Deutsch, Sachkunde:</b> Themen nach dem LehrplanPLUS Bayern. Das Kind sucht sich selbst aus, was es übt („<span class="sagen">Ich will Plus und Minus üben</span>“, „<span class="sagen">Lass uns Malrechnen</span>“), auch aus anderen Klassen, und wie schwer („<span class="sagen">Mach es schwerer</span>“, „<span class="sagen">leichter bitte</span>“: leicht, mittel, schwer). Hat es nichts gewählt, fragt Pixel und schlägt Themen der Klasse vor. Sind die letzten 5 Aufgaben alle richtig, schlägt Pixel „schwerer“ vor, bei 3 oder mehr falschen „leichter“, und ist ein Thema auf „schwer“ geschafft (✓✓), schlägt er das nächste Thema vor. Pixel merkt sich Thema, Schwierigkeit und jedes Ergebnis. Geschafft ist ein Thema, wenn mindestens 5 Aufgaben gestellt und davon 80 % richtig waren.</li>
+        <li><b>Einmaleins:</b> Bei den Einmaleins- und Geteilt-Themen nutzt Pixel einen Karteikasten: Jede Aufgabe (7 mal 8, 56 geteilt durch 7) ist eine Karte, die nach richtigen Antworten immer seltener kommt, bis sie sitzt. Die Tabelle im Tab Lernen zeigt farbig, welche Aufgaben sitzen.</li>
+        <li><b>Englisch:</b> Das Kind wählt ein Thema („<span class="sagen">Ich will Tiere üben</span>“, Farben, Essen, Schule …, oder gemischt) und die Schwierigkeit wie in den anderen Fächern. Lernkartei mit Wörtern und Sätzen. Richtig beantwortete Wörter kommen erst nach einigen Tagen wieder, falsche noch am selben Tag. Bei 80 % einer Stufe steigt Pixel eine Stufe auf.</li>
+        <li><b>Zuhör-Pixel</b> liest einen Text vor („<span class="sagen">Lies mir einen Text vor</span>“), auf Wunsch ein zweites Mal, und stellt dann fünf Fragen dazu, wie in der Zuhörprobe.</li>
+      </ul>
+      <h3>Sticker, Serien und Rekorde</h3>
+      <p>Bei jeder richtigen Antwort gibt es ein kurzes „Pling“, bei 5, 10, 15 … richtigen in Folge eine Fanfare. Für jedes geschaffte Thema bekommt das Kind einen Tier-Sticker für sein Album (golden, wenn das Thema auch auf „schwer“ sitzt), in Englisch für je 10 gekonnte Wörter. Schafft es an einem Tag mehr richtige Aufgaben als je zuvor, gibt es einen neuen Rekord. „<span class="sagen">Wie viele Sticker habe ich?</span>“ beantwortet Pixel selbst, das Album steht im Tab Lernen.</p>
+      <h3>Für Eltern</h3>
+      <p>Im Tab <b>Lernen</b> stehen je Kind und Fach das gewählte Thema, die Schwierigkeit, wie viel heute und in den letzten 7 Tagen richtig war und der Stand jedes Themas (auch je Schwierigkeit). Mit „Üben“ legst du ein Thema fest, z. B. vor einer Probe. Pixel gibt Hausaufgaben nicht einfach vor, sondern hilft mit Denkanstößen.</p>
+    </section>
+
+    <section class="karte">
+      <h2>Alle Sprachbefehle</h2>
+      <p class="hinweis" style="margin-top:0">Befehle wirken nur, wenn man sie allein sagt (nicht mitten in einem längeren Satz). Alles andere beantwortet Pixel ganz normal.</p>
+      <h3>Gespräch</h3>
+      <table><tbody>
+        <tr><td>Hey Pixel</td><td>Pixel hört zu</td></tr>
+        <tr><td>Tschüss, Ende, Bis bald, Schlaf gut, Danke, das war's</td><td>Gespräch beenden, Pixel wartet wieder auf „Hey Pixel“</td></tr>
+        <tr><td>… also tschüss / Ich muss jetzt los</td><td>Pixel verabschiedet sich und beendet das Gespräch</td></tr>
+        <tr><td>Pause, Stopp, Sei still, Ruhe</td><td>Gespräch sofort beenden, ohne Antwort</td></tr>
+        <tr><td>Nochmal, Wie bitte?, Was hast du gesagt?</td><td>Letzte Antwort wiederholen</td></tr>
+        <tr><td>Neues Gespräch, Vergiss alles, Von vorne</td><td>Gesprächsverlauf löschen</td></tr>
+        <tr><td>Lauter / Leiser</td><td>Lautstärke eine Stufe ändern (Stufe 1 bis 6)</td></tr>
+      </tbody></table>
+      <h3>Profile und Persönlichkeiten</h3>
+      <table><tbody>
+        <tr><td>Ich bin …, Hier ist …, Ich heiße …</td><td>Anmelden, Pixel begrüßt mit Namen</td></tr>
+        <tr><td>Wer bin ich?</td><td>Pixel sagt, wer angemeldet ist</td></tr>
+        <tr><td>Welche Persönlichkeiten gibt es?, Wer kannst du alles sein?</td><td>Pixel zählt sie auf</td></tr>
+        <tr><td>Persönlichkeit …, Sei …, Ich will mit … reden</td><td>Zur Persönlichkeit wechseln, z. B. „Sei ein Pirat“. Das Gespräch geht weiter.</td></tr>
+        <tr><td>Klugmodus / Schnellmodus</td><td>Sonnet (genauer, teurer) oder Haiku (schneller, günstig) für die aktive Persönlichkeit</td></tr>
+        <tr><td>Welches Modell?</td><td>Pixel sagt, welches Modell gerade antwortet</td></tr>
+      </tbody></table>
+      <h3>Lernen und Geschichten</h3>
+      <table><tbody>
+        <tr><td>Ich will Mathe / Deutsch / Englisch / Sachkunde üben, Lass uns Zuhören üben</td><td>Wechselt direkt zur passenden Persönlichkeit, die gleich loslegt</td></tr>
+        <tr><td>Ich will … üben (z. B. Plus und Minus, Malrechnen, Nomen, Tiere)</td><td>Thema auswählen</td></tr>
+        <tr><td>Mach es schwerer / leichter</td><td>Schwierigkeit ändern (leicht, mittel, schwer)</td></tr>
+        <tr><td>Lies mir einen Text vor</td><td>Zuhör-Übung bei Zuhör-Pixel</td></tr>
+        <tr><td>Wie viele Sticker habe ich?, Mein Album</td><td>Pixel erzählt vom Sticker-Album</td></tr>
+        <tr><td>Lass uns ein Spiel spielen</td><td>Ein Spiel mit Pixel (Rätsel, Wörter)</td></tr>
+        <tr><td>Erzähl mir eine Gute-Nacht-Geschichte (über …)</td><td>Ruhige Geschichte, etwa drei Minuten. In der Schlafenszeit ist bis <span data-wert="geschichte_bis"></span> noch genau eine erlaubt.</td></tr>
+      </tbody></table>
+      <h3>Persönlichkeiten und ihre Wörter</h3>
+      <p class="hinweis" style="margin-top:0">So erkennt Pixel den Wechselwunsch („Sei …“, „Persönlichkeit …“):</p>
+      <table><tbody id="anl_persoenlichkeiten"></tbody></table>
+    </section>
+  </div>
+  </div>
+
+  <div id="bereich_auswertung" class="versteckt">
+    <div class="umschalter" role="group" aria-label="Zeitraum">
+      <button type="button" data-tage="7" aria-pressed="false">7 Tage</button>
+      <button type="button" data-tage="14" aria-pressed="true">14 Tage</button>
+      <button type="button" data-tage="30" aria-pressed="false">30 Tage</button>
+    </div>
+
+    <section class="karte">
+      <div class="raster">
+        <div class="wert"><small>Kosten im Zeitraum</small><b id="a_kosten">–</b><span id="a_fragen"></span></div>
+        <div class="wert"><small>Pro Frage</small><b id="a_proFrage">–</b><span>alle Dienste</span></div>
+        <div class="wert"><small>Dieser Monat</small><b id="a_monat">–</b><span id="a_monatFragen"></span></div>
+        <div class="wert"><small>Hochrechnung Monat</small><b id="a_hochrechnung">–</b><span>bei gleicher Nutzung</span></div>
+      </div>
+    </section>
+
+    <section class="karte">
+      <h2>Kosten pro Tag</h2>
+      <div class="legende">
+        <span style="--farbe: var(--reihe-1)">Claude</span>
+        <span style="--farbe: var(--reihe-2)">Spracherkennung</span>
+        <span style="--farbe: var(--reihe-3)">Stimme</span>
+      </div>
+      <div class="diagramm" id="a_diagramm" role="img" aria-label="Kosten pro Tag"></div>
+      <div class="achse"><span id="a_achse_von"></span><span id="a_achse_bis"></span></div>
+      <p class="info" id="a_info">Säule antippen für Details.</p>
+    </section>
+
+    <section class="karte">
+      <h2>Wartezeit bis zur Antwort</h2>
+      <p class="hinweis" style="margin:0" id="a_warten_text"></p>
+      <div class="stapel" id="a_stapel" role="img" aria-label="Zusammensetzung der Wartezeit"></div>
+      <div class="legende" id="a_warten_legende" style="margin:0"></div>
+    </section>
+
+    <section class="karte">
+      <h2>Je Stimme</h2>
+      <table><thead><tr><th>Stimme</th><th class="zahl">Messungen</th><th class="zahl">1. Satz</th><th class="zahl">Wartezeit</th></tr></thead>
+        <tbody id="a_stimmen"></tbody></table>
+    </section>
+
+    <section class="karte">
+      <h2>Je Sprachmodell</h2>
+      <table><thead><tr><th>Modell</th><th class="zahl">Fragen</th><th class="zahl">1. Satz</th><th class="zahl">pro Frage</th></tr></thead>
+        <tbody id="a_modelle"></tbody></table>
+    </section>
+
+    <section class="karte">
+      <h2>Fehler im Zeitraum</h2>
+      <div class="raster">
+        <div class="wert"><small>Claude nicht erreichbar</small><b id="a_f_claude">–</b></div>
+        <div class="wert"><small>Erkennung fehlgeschlagen</small><b id="a_f_deepgram">–</b></div>
+        <div class="wert"><small>Antwort abgeschnitten</small><b id="a_f_max">–</b></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="leiste" id="leiste">
+  <div>
+    <button type="button" id="verwerfen">Verwerfen</button>
+    <button type="button" class="haupt" id="speichern">Speichern</button>
+  </div>
+</div>
+<audio id="probe_audio" preload="none"></audio>
+<p id="toast" class="meldung gut versteckt" style="position:fixed;left:16px;right:16px;top:12px;max-width:528px;margin:0 auto;z-index:2"></p>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const ZUSTAENDE = { startet: "Startet", wartet: "Wartet auf Wake Word", hoert_zu: "Hört zu",
+  antwortet: "Denkt nach", spricht: "Spricht", spielt: "Spielt", pausiert: "Pausiert", aus: "Aus" };
+const ZAHLFELDER = ["pause", "folge", "ww_schwelle", "tageslimit_cent", "max_fragen", "tageslimit_cent_erwachsene",
+  "tagesziel"];
+// geaendert: allgemeine Einstellungen, geaendertP: Felder der Persönlichkeit im Editor (bearbeitet)
+let daten = null, geaendert = new Set(), geaendertP = new Set(), bearbeitet = null, auswahlStand = "";
+const offen = () => geaendert.size + geaendertP.size > 0;
+const pers = (pid) => daten.persoenlichkeiten[pid];
+
+const zahl = (w, s = 2) => Number(w).toLocaleString("de-DE", { maximumFractionDigits: s });
+const sek = (w) => (w == null ? "–" : zahl(w, 2) + " s");
+
+async function api(pfad, inhalt) {
+  const antwort = await fetch(pfad, inhalt === undefined ? {} :
+    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(inhalt) });
+  if (antwort.status === 401) { zeigeAnmeldung(); throw new Error("abgemeldet"); }
+  return { code: antwort.status, daten: await antwort.json() };
+}
+
+function zeigeAnmeldung() {
+  $("seite").classList.add("versteckt"); $("leiste").classList.remove("sichtbar");
+  $("anmeldung").classList.remove("versteckt"); $("pin").focus();
+}
+
+$("anmeldeformular").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const r = await fetch("/api/anmelden", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pin: $("pin").value }) });
+  const d = await r.json();
+  if (!r.ok) { $("anmeldefehler").textContent = d.fehler; $("anmeldefehler").classList.remove("versteckt"); return; }
+  $("pin").value = ""; $("anmeldefehler").classList.add("versteckt");
+  $("anmeldung").classList.add("versteckt"); laden();
+});
+
+$("abmelden").addEventListener("click", async () => { await api("/api/abmelden", {}); zeigeAnmeldung(); });
+
+function toast(text, art = "gut") {
+  const t = $("toast"); t.textContent = text; t.className = "meldung " + art;
+  clearTimeout(toast.uhr); toast.uhr = setTimeout(() => t.classList.add("versteckt"), 3500);
+}
+
+function stimmenName(kennung) {
+  const s = daten && daten.stimmen.find((x) => x.kennung === kennung);
+  return s ? `${s.anbieter.replace(" (lokal)", "")} ${s.name}` : kennung;
+}
+function modellName(kennung) {
+  const m = daten && daten.modelle.find((x) => x.kennung === kennung);
+  return m ? m.name : kennung;
+}
+
+function zeigeStatus() {
+  const s = daten.status, e = daten.einstellungen, t = daten.tag;
+  $("abmelden").classList.toggle("versteckt", !daten.pin_aktiv);
+  const z = s.laeuft ? s.zustand : "aus";
+  $("zustand").textContent = (ZUSTAENDE[z] || z) + (s.laeuft && s.hinweis ? ` · ${s.hinweis}` : "");
+  $("zustand").className = "zustand " + z;
+  $("nichtlaeuft").classList.toggle("versteckt", !!s.laeuft);
+
+  $("kosten").textContent = zahl(t.summe_cent, 2) + " ct";
+  const limit = e.tageslimit_cent;
+  $("kostenlimit").textContent = limit ? `von ${zahl(limit, 0)} ct` : "kein Limit";
+  const anteil = limit ? Math.min(100, (t.summe_cent / limit) * 100) : 0;
+  $("kostenbalken").style.width = anteil + "%";
+  $("kostenbalken").classList.toggle("voll", anteil >= 100);
+  $("fragen").textContent = t.fragen;
+  $("fragenlimit").textContent = e.max_fragen ? `von ${e.max_fragen}` : "kein Limit";
+  $("wartezeit").textContent = sek(s.laeuft ? s.median_wartezeit_s : null);
+  $("wartezeitletzte").textContent = s.laeuft && s.letzte_wartezeit_s != null ? `zuletzt ${sek(s.letzte_wartezeit_s)}` : "seit Start";
+  $("laeuftmodell").textContent = s.laeuft ? (s.persoenlichkeit_name || "Pixel") : "–";
+  const kind = s.laeuft && s.kind && daten.kinder[s.kind];
+  $("laeuftstimme").textContent = s.laeuft ? `${modellName(s.modell)} · ${stimmenName(s.stimme)}` +
+    (kind ? ` · mit ${kind.name}` : "") : "";
+
+  const p = pers(daten.aktiv);
+  const abweichend = s.laeuft && (s.persoenlichkeit !== daten.aktiv || s.modell !== p.modell || s.stimme !== p.stimme);
+  $("abweichung").classList.toggle("versteckt", !abweichend);
+  if (abweichend) $("abweichung").textContent =
+    "Gespeicherte Einstellungen weichen ab. Sie gelten ab der nächsten Frage, oder das Programm wurde mit Startoptionen gestartet.";
+
+  const frei = Object.entries(t.freimenge || {});
+  $("freimenge").classList.toggle("versteckt", !frei.length);
+  $("freimenge").textContent = frei.map(([g, f]) =>
+    `Google-Freimenge ${g.includes("chirp3") ? "Chirp 3" : "Neural2"}: ${zahl(f.genutzt, 0)} von ${zahl(f.frei, 0)} Zeichen in diesem Monat`).join(" · ");
+}
+
+function fuelleAuswahl() {
+  const ww = $("wakeword");
+  ww.innerHTML = "";
+  for (const w of daten.wakewords) ww.add(new Option(w.name, w.kennung));
+  for (const id of ["p_modell", "p_modell_geschichte"]) {
+    const modell = $(id);
+    modell.innerHTML = "";
+    for (const m of daten.modelle) modell.add(new Option(m.name, m.kennung));
+  }
+
+  // Stimmen nach Anbieter gruppiert, getrennt nach Sprache (Deutsch für Gespräch und Geschichte, Englisch extra)
+  const gruppiert = (sprache) => {
+    const gruppen = {};
+    for (const s of daten.stimmen.filter((x) => (x.sprache || "de") === sprache)) {
+      if (!gruppen[s.anbieter]) { gruppen[s.anbieter] = document.createElement("optgroup"); gruppen[s.anbieter].label = s.anbieter; }
+      const teile = [s.name + (s.geschlecht ? ` (${s.geschlecht})` : ""), s.median_s != null ? sek(s.median_s) : "nicht gemessen"];
+      gruppen[s.anbieter].append(new Option(teile.join(" · "), s.kennung));
+    }
+    return Object.values(gruppen);
+  };
+
+  const stimme = $("p_stimme");
+  stimme.innerHTML = "";
+  gruppiert("de").forEach((g) => stimme.append(g));
+
+  const sg = $("p_stimme_geschichte");
+  sg.innerHTML = "";
+  sg.add(new Option("Wie im Gespräch", ""));
+  gruppiert("de").forEach((g) => sg.append(g));
+
+  const se = $("p_stimme_englisch");
+  se.innerHTML = "";
+  se.add(new Option("Keine (Englisch spricht die normale Stimme)", ""));
+  gruppiert("en").forEach((g) => se.append(g));
+}
+
+// Auswahllisten der Persönlichkeiten nur neu aufbauen, wenn sich Kennungen, Namen oder die aktive geändert haben
+function fuellePersoenlichkeitsListen() {
+  const stand = JSON.stringify([daten.aktiv, bearbeitet,
+    Object.entries(daten.persoenlichkeiten).map(([k, p]) => [k, p.name, p.per_sprache])]);
+  if (stand === auswahlStand) return;
+  auswahlStand = stand;
+  const aktivWahl = geaendert.has("persoenlichkeit") ? $("persoenlichkeit").value : null;
+  $("persoenlichkeit").innerHTML = ""; $("p_auswahl").innerHTML = "";
+  for (const [pid, p] of Object.entries(daten.persoenlichkeiten)) {
+    $("persoenlichkeit").add(new Option(p.name + (p.per_sprache ? "" : " (nur hier wählbar)"), pid));
+    $("p_auswahl").add(new Option(p.name + (pid === daten.aktiv ? " (aktiv)" : ""), pid));
+  }
+  $("persoenlichkeit").value = aktivWahl && pers(aktivWahl) ? aktivWahl : daten.aktiv;
+  $("p_auswahl").value = bearbeitet;
+}
+
+function zeigeInfos() {
+  const m = daten.modelle.find((x) => x.kennung === $("p_modell").value);
+  $("p_modell_info").textContent = m ? m.kosten : "";
+  const s = daten.stimmen.find((x) => x.kennung === $("p_stimme").value);
+  if (s) {
+    const messung = s.median_s != null ? `erster Satz nach ${sek(s.median_s)} (${s.messungen} Messungen)` : "Verzögerung noch nicht gemessen";
+    const daten_hinweis = s.kennung.startsWith("piper:") ? "läuft lokal, auch ohne Internet" : "Antworttexte gehen an den Anbieter, bei Ausfall spricht Piper";
+    $("p_stimme_info").textContent = `${s.kosten} · ${messung} · ${daten_hinweis}`;
+  }
+  for (const f of ["p_lautstaerke", "pause", "folge", "ww_schwelle"]) {
+    const w = $(f).value;
+    $(f + "_wert").textContent = f === "pause" || f === "folge" ? zahl(w, 1) + " s" : f === "ww_schwelle" ? zahl(w, 2) : w;
+  }
+  const an = $("schlaf_an").checked;
+  $("schlaf_von").disabled = !an; $("schlaf_bis").disabled = !an;
+  $("geschichte_zeit").disabled = !$("geschichte_an").checked;
+  $("p_woerter").disabled = !$("p_per_sprache").checked;
+  const se = daten.stimmen.find((x) => x.kennung === $("p_stimme_englisch").value);
+  $("p_stimme_englisch_info").textContent = se
+    ? `${se.kosten} · Spricht die Stellen, die Claude als Englisch markiert. Dafür müssen die Anweisungen die Marken <en> und </en> erklären (siehe Mister Pixel).`
+    : "Englische Wörter werden mit der normalen Stimme gesprochen.";
+  document.querySelector('[data-probe="p_stimme_englisch"]').disabled = !se;
+  const sg = daten.stimmen.find((x) => x.kennung === $("p_stimme_geschichte").value);
+  $("p_stimme_geschichte_info").textContent = sg ? `${sg.kosten} · ${sg.kennung.startsWith("piper:") ? "läuft lokal" : "Text geht an den Anbieter"}`
+    : "Dieselbe Stimme wie bei Fragen und Antworten.";
+  $("p_loeschen").disabled = bearbeitet === "pixel";
+  $("p_hinweis").textContent = bearbeitet === daten.aktiv ? "Diese Persönlichkeit ist gerade aktiv."
+    : "Nicht aktiv. Änderungen gelten, sobald sie aktiv ist.";
+}
+
+const PROMPTS = ["p_system_prompt", "p_geschichten_prompt"];
+const standardPrompt = (id) => daten.standard_prompts[id.slice(2)];
+
+function zeigePromptInfo() {
+  if (!daten) return;
+  for (const name of PROMPTS) {
+    const text = $(name).value.trim(), standard = standardPrompt(name).trim();
+    const eigen = text !== standard;
+    $(name + "_marke").textContent = eigen ? "eigene Fassung" : "Standard";
+    $(name + "_marke").className = "marke" + (eigen ? " eigen" : "");
+    // Deutsch: gemessen ca. 2 Zeichen pro Token (count_tokens, Oktober 2026)
+    $(name + "_zaehler").textContent = `${text.length.toLocaleString("de-DE")} Zeichen, ca. ${Math.round(text.length / 2).toLocaleString("de-DE")} Tokens`;
+  }
+}
+
+document.querySelectorAll("[data-standard]").forEach((knopf) => knopf.addEventListener("click", () => {
+  const name = knopf.dataset.standard;
+  $(name).value = standardPrompt(name);
+  markiere(name);
+  zeigePromptInfo();
+}));
+
+function setzeFeld(name, wert) {
+  if (name === "geschichte_bis") {
+    $("geschichte_an").checked = wert !== "aus";
+    if (wert !== "aus") $("geschichte_zeit").value = wert.padStart(5, "0");
+    return;
+  }
+  if (name === "schlafenszeit") {
+    const an = wert !== "aus";
+    $("schlaf_an").checked = an;
+    if (an) { const [v, b] = wert.split("-"); $("schlaf_von").value = v.padStart(5, "0"); $("schlaf_bis").value = b.padStart(5, "0"); }
+    return;
+  }
+  if (!$(name)) return;
+  if ($(name).type === "checkbox") $(name).checked = wert;
+  else $(name).value = wert;
+}
+
+function setzePFeld(feld, wert) {
+  const el = $("p_" + feld);
+  if (!el) return;
+  if (el.type === "checkbox") el.checked = wert;
+  else if (feld === "woerter") el.value = wert.join(", ");
+  else if (PROMPTS.includes("p_" + feld)) el.value = wert || standardPrompt("p_" + feld);
+  else el.value = wert;
+}
+
+function pWert(feld) {
+  const el = $("p_" + feld);
+  if (el.type === "checkbox") return el.checked;
+  if (feld === "woerter") return el.value.split(",").map((w) => w.trim()).filter(Boolean);
+  if (feld === "lautstaerke") return Number(el.value);
+  return el.value;
+}
+
+// ------------------------------------------------------------------ Kinder
+const ERWACHSEN = 14;  // wie kinder.ERWACHSEN
+const KLASSEN = [[0, "Kindergarten/Vorschule"], ...Array.from({ length: 13 }, (_, i) => [i + 1, `${i + 1}. Klasse`]),
+  [ERWACHSEN, "Erwachsen (Hochschulniveau)"]];
+// Lernstand (Grundschul-Lehrplan) gibt es nur für Kinder
+const nurKinder = () => Object.fromEntries(Object.entries(daten.kinder).filter(([, k]) => k.klasse !== ERWACHSEN));
+let kinderStand = "";
+const kinderOffen = new Set();  // Zeilen mit ungespeicherten Änderungen werden beim Aktualisieren nicht überschrieben
+
+function klassenAuswahl(select, wert) {
+  select.innerHTML = "";
+  for (const [k, text] of KLASSEN) select.add(new Option(text, k));
+  select.value = String(wert);
+}
+
+function fuelleKinder() {
+  const auswahl = $("kind"), wahl = geaendert.has("kind") ? auswahl.value : daten.einstellungen.kind;
+  auswahl.innerHTML = "";
+  auswahl.add(new Option("Noch niemand angemeldet", ""));
+  for (const [id, k] of Object.entries(daten.kinder)) auswahl.add(new Option(`${k.name} (${KLASSEN[k.klasse][1]})`, id));
+  auswahl.value = daten.kinder[wahl] ? wahl : "";
+  if (!$("k_neu_klasse").options.length) klassenAuswahl($("k_neu_klasse"), 4);
+
+  const stand = JSON.stringify(daten.kinder);
+  if (stand === kinderStand) return;
+  kinderStand = stand;
+  const liste = $("kinderliste");
+  // Zeilen mit ungespeicherten Änderungen bleiben stehen, neue und gelöschte Profile kommen trotzdem an
+  const offen = new Map([...liste.children].filter((z) => kinderOffen.has(z.dataset.id)).map((z) => [z.dataset.id, z]));
+  for (const id of kinderOffen) if (!daten.kinder[id]) kinderOffen.delete(id);
+  liste.innerHTML = "";
+  for (const [id, k] of Object.entries(daten.kinder)) {
+    if (offen.has(id)) { liste.append(offen.get(id)); continue; }
+    const zeile = document.createElement("div");
+    zeile.dataset.id = id;
+    zeile.className = "feld";
+    zeile.innerHTML = `<div class="zeile"><input type="text" maxlength="30" autocomplete="off" data-feld="name" aria-label="Name">
+      <select data-feld="klasse" aria-label="Klasse"></select></div>
+      <input type="text" autocomplete="off" data-feld="woerter" style="margin-top:8px"
+        placeholder="Weitere Wörter, z. B. Spitzname" aria-label="Weitere Wörter, an denen Pixel das Kind erkennt">
+      <div class="zeile" style="margin-top:8px"><span style="flex:2;font-size:14px">Sprechpause in Sekunden (0 = automatisch)</span>
+        <input type="number" data-feld="sprechpause" min="0" max="3" step="0.1" inputmode="decimal" style="flex:1"
+          aria-label="Sprechpause in Sekunden, 0 = automatisch"></div>
+      <div class="zeile-klein"><span class="fehlertext"></span>
+        <span><button type="button" class="klein" data-aktion="speichern">Speichern</button>
+        <button type="button" class="klein" data-aktion="loeschen">Löschen</button></span></div>`;
+    zeile.querySelector('[data-feld="name"]').value = k.name;  // Namen nie als HTML einsetzen
+    klassenAuswahl(zeile.querySelector('[data-feld="klasse"]'), k.klasse);
+    zeile.querySelector('[data-feld="woerter"]').value = k.woerter.join(", ");
+    zeile.querySelector('[data-feld="sprechpause"]').value = k.sprechpause;
+    zeile.addEventListener("input", () => kinderOffen.add(id));
+    zeile.querySelector('[data-aktion="speichern"]').addEventListener("click", () => speichereKind(id, zeile));
+    zeile.querySelector('[data-aktion="loeschen"]').addEventListener("click", () => loescheKind(id, k.name));
+    liste.append(zeile);
+  }
+}
+
+async function speichereKind(id, zeile) {
+  const werte = {
+    name: zeile.querySelector('[data-feld="name"]').value,
+    klasse: Number(zeile.querySelector('[data-feld="klasse"]').value),
+    woerter: zeile.querySelector('[data-feld="woerter"]').value.split(",").map((w) => w.trim()).filter(Boolean),
+    sprechpause: Number(zeile.querySelector('[data-feld="sprechpause"]').value || 0),
+  };
+  const { code, daten: d } = await api("/api/kind", { aktion: "speichern", id, werte });
+  const fehler = typeof d.fehler === "string" ? d.fehler : Object.values(d.fehler || {}).join(", ");
+  zeile.querySelector(".fehlertext").textContent = code === 200 ? "" : fehler;
+  if (code === 200) { kinderOffen.delete(id); kinderStand = ""; toast("Gespeichert."); await aktualisieren(); }
+}
+
+async function loescheKind(id, name) {
+  if (!confirm(`Profil „${name}“ löschen?`)) return;
+  const { code, daten: d } = await api("/api/kind", { aktion: "loeschen", id });
+  if (code !== 200) { toast(d.fehler || "Löschen nicht möglich.", "fehler"); return; }
+  kinderOffen.delete(id); kinderStand = "";
+  toast(`„${name}“ gelöscht.`);
+  await aktualisieren();
+}
+
+$("k_neu").addEventListener("click", async () => {
+  const { code, daten: d } = await api("/api/kind", { aktion: "neu", name: $("k_neu_name").value,
+    klasse: Number($("k_neu_klasse").value) });
+  $("k_neu_fehler").textContent = code === 200 ? "" : (d.fehler || "Anlegen nicht möglich.");
+  if (code !== 200) return;
+  toast(`„${$("k_neu_name").value.trim()}“ angelegt.`);
+  $("k_neu_name").value = ""; kinderStand = "";
+  await aktualisieren();
+});
+
+// ------------------------------------------------------------------ Lernstand
+let lernstand = null, lernstandKind = null, lernstandZeit = 0;
+
+function fuelleLernstandKinder() {
+  const kinder = nurKinder();
+  const s = $("lp_kind"), wahl = s.value || daten.einstellungen.kind || Object.keys(kinder)[0] || "";
+  const stand = Object.entries(kinder).map(([id, k]) => id + k.name).join("|");
+  if (s.dataset.stand !== stand) {
+    s.dataset.stand = stand;
+    s.innerHTML = "";
+    for (const [id, k] of Object.entries(kinder)) s.add(new Option(k.name, id));
+  }
+  s.value = kinder[wahl] ? wahl : (Object.keys(kinder)[0] || "");
+  $("lp_leer").classList.toggle("versteckt", !!s.value);
+  $("lp_inhalt").classList.toggle("versteckt", !s.value);
+  if (!s.value) $("themen_karten").innerHTML = "";
+  // Lernstand ändert sich während Gesprächen: im Tab Lernen alle 15 s neu laden, sofort bei anderem Kind
+  if (s.value && ansicht === "lernen" && (s.value !== lernstandKind || Date.now() - lernstandZeit > 15000)) {
+    ladeLernstand();
+    ladeThemen();
+    ladeAlbum();
+  }
+}
+
+async function ladeAlbum() {
+  const kid = $("lp_kind").value;
+  if (!kid) return;
+  const { code, daten: d } = await api(`/api/sticker?kind=${encodeURIComponent(kid)}`);
+  if (code !== 200) return;
+  $("al_anzahl").textContent = d.sticker.length;
+  $("al_verschieden").textContent = `${d.verschiedene} von ${d.anzahl_tiere} Tieren`;
+  $("al_heute").textContent = d.heute;
+  $("al_rekord").textContent = `Rekord: ${d.rekord} an einem Tag`;
+  const album = $("al_sticker");
+  album.innerHTML = "";
+  if (!d.sticker.length) { album.textContent = "Noch keine Sticker."; return; }
+  for (const s of [...d.sticker].reverse()) {
+    const kachel = document.createElement("div");
+    if (s.gold) kachel.className = "gold";
+    const bild = document.createElement("b");
+    bild.textContent = s.emoji;
+    kachel.append(bild, document.createTextNode(s.tier.split(" ").slice(1).join(" ")));
+    kachel.title = `${s.grund}, ${new Date(s.datum + "T12:00:00").toLocaleDateString("de-DE")}`;
+    album.append(kachel);
+  }
+}
+
+// ------------------------------------------------------------------ Lernpläne Mathe, Deutsch, HSU
+const FAECHER = ["mathe", "deutsch", "hsu"];
+
+async function ladeThemen(fach, aenderung) {
+  const kid = $("lp_kind").value;
+  if (!kid) return;
+  for (const f of fach ? [fach] : FAECHER) {
+    const { code, daten: d } = aenderung ? await api("/api/themen", { kind: kid, fach: f, ...aenderung })
+      : await api(`/api/themen?kind=${encodeURIComponent(kid)}&fach=${f}`);
+    if (code !== 200) { toast(d.fehler || "Lernstand nicht ladbar.", "fehler"); continue; }
+    zeigeThemen(d);
+  }
+}
+
+function zeigeThemen(l) {
+  let karte = document.getElementById("themen_" + l.fach);
+  if (!karte) {
+    karte = document.createElement("section");
+    karte.className = "karte";
+    karte.id = "themen_" + l.fach;
+    const alle = $("themen_karten");
+    const vor = FAECHER.slice(FAECHER.indexOf(l.fach) + 1).map((f) => document.getElementById("themen_" + f)).find(Boolean);
+    alle.insertBefore(karte, vor || null);
+  }
+  const offenStufen = new Set([...karte.querySelectorAll("details[open]")].map((d) => d.dataset.stufe));
+  const ersteAnzeige = !karte.dataset.gezeigt;
+  karte.dataset.gezeigt = "1";
+  karte.innerHTML = "";
+  const h = document.createElement("h2");
+  h.textContent = l.name;
+  const alleThemen = l.stufen.flatMap((s) => s.themen);
+  const aktuell = alleThemen.find((t) => t.id === l.aktuell);
+  const quote = ([r, n]) => (n ? `${r} von ${n} richtig (${Math.round((r / n) * 100)} %)` : "noch nichts");
+  const raster = document.createElement("div");
+  raster.className = "raster";
+  raster.style.marginBottom = "12px";
+  // "Übt gerade" nur während eines Gesprächs mit diesem Kind in diesem Fach, sonst "Zuletzt geübt"
+  const s = daten.status || {};
+  const uebtJetzt = s.laeuft && s.kind === $("lp_kind").value && s.lernplan === l.fach && ["hoert_zu", "antwortet"].includes(s.zustand);
+  raster.innerHTML = `<div class="wert"><small>${uebtJetzt ? "Übt gerade" : "Zuletzt geübt"}</small><b style="font-size:16px"></b><span></span></div>
+    <div class="wert"><small>Schwierigkeit</small><b style="font-size:16px"></b><span>wählt das Kind</span></div>
+    <div class="wert"><small>Heute</small><b style="font-size:16px"></b></div>
+    <div class="wert"><small>Letzte 7 Tage</small><b style="font-size:16px"></b></div>`;
+  const w = raster.querySelectorAll(".wert");
+  w[0].querySelector("b").textContent = aktuell ? aktuell.name : "Noch nichts gewählt";
+  w[0].querySelector("span").textContent = !aktuell ? "Pixel fragt das Kind" : uebtJetzt ? "im Gespräch"
+    : "beim nächsten Mal fragt Pixel, ob es weitergeht";
+  w[1].querySelector("b").textContent = l.niveau.charAt(0).toUpperCase() + l.niveau.slice(1);
+  w[2].querySelector("b").textContent = quote(l.heute);
+  w[3].querySelector("b").textContent = quote(l.woche);
+  karte.append(h, raster);
+
+  for (const st of l.stufen) {
+    const d = document.createElement("details");
+    d.dataset.stufe = st.stufe;
+    d.open = ersteAnzeige ? st.stufe === l.stufe : offenStufen.has(String(st.stufe));
+    const s = document.createElement("summary");
+    s.textContent = `${st.name}: ${st.gekonnt} von ${st.themen.length} geschafft` + (st.stufe === l.stufe ? " (Klasse des Kindes)" : "");
+    d.append(s);
+    for (const t of st.themen) {
+      const z = document.createElement("div");
+      z.className = "thema";
+      const name = document.createElement("div");
+      name.className = "name";
+      name.textContent = t.name;
+      const klein = document.createElement("small");
+      const je = ["leicht", "mittel", "schwer"].filter((n) => t.niveaus[n]).map((n) => `${n} ${t.niveaus[n][0]}/${t.niveaus[n][1]}`);
+      klein.textContent = t.antworten ? `${t.richtig} von ${t.antworten} richtig` + (je.length ? ` (${je.join(", ")})` : "")
+        + (t.zuletzt ? `, zuletzt ${new Date(t.zuletzt + "T12:00:00").toLocaleDateString("de-DE", { day: "numeric", month: "numeric" })}` : "")
+        : t.aufgaben;
+      name.append(klein);
+      const stand = document.createElement("span");
+      stand.className = "stand " + (t.status === "aktuell" ? "aktuell" : t.gekonnt ? "gekonnt" : "");
+      stand.textContent = (t.status === "aktuell" ? (uebtJetzt ? "übt gerade" : "zuletzt geübt") : "")
+        + (t.meister ? (t.status === "aktuell" ? " ✓✓" : "✓✓ auch schwer") : t.gekonnt ? (t.status === "aktuell" ? " ✓" : "✓ geschafft") : "");
+      const knopf = document.createElement("button");
+      knopf.type = "button"; knopf.className = "klein";
+      if (t.status === "aktuell") {
+        knopf.textContent = "Kind wählt";
+        knopf.title = "Auswahl zurücksetzen, Pixel fragt das Kind";
+        knopf.addEventListener("click", () => ladeThemen(l.fach, { aktion: "aktuell", thema: "" }));
+      } else {
+        knopf.textContent = "Üben";
+        knopf.addEventListener("click", async () => { await ladeThemen(l.fach, { aktion: "aktuell", thema: t.id }); toast(`Pixel übt jetzt „${t.name}“.`); });
+      }
+      z.append(name, stand, knopf);
+      d.append(z);
+    }
+    karte.append(d);
+  }
+  const feld = document.createElement("div");
+  feld.className = "feld";
+  feld.style.marginTop = "12px";
+  feld.innerHTML = `<label>Schwierigkeit und Klasse für Vorschläge</label><div class="zeile">
+    <select aria-label="Schwierigkeit" data-art="niveau"></select><select aria-label="Klasse für Vorschläge" data-art="stufe"></select></div>
+    <div class="erklaerung">Das Kind wählt Thema und Schwierigkeit selbst, z. B. „Ich will Malrechnen“ oder „Mach es schwerer“. Hat es nichts gewählt, schlägt Pixel Themen aus der eingestellten Klasse vor. „Üben“ legt ein Thema von hier aus fest.</div>`;
+  const nw = feld.querySelector('[data-art="niveau"]'), sw = feld.querySelector('[data-art="stufe"]');
+  for (const n of l.niveaus) nw.add(new Option(n.charAt(0).toUpperCase() + n.slice(1), n));
+  nw.value = l.niveau;
+  for (const st of l.stufen) sw.add(new Option(st.name, st.stufe));
+  sw.value = l.stufe;
+  nw.addEventListener("change", async () => { await ladeThemen(l.fach, { aktion: "niveau", niveau: nw.value }); toast("Schwierigkeit gesetzt."); });
+  sw.addEventListener("change", async () => { await ladeThemen(l.fach, { aktion: "stufe", stufe: Number(sw.value) }); toast("Klasse für Vorschläge gesetzt."); });
+  karte.append(feld);
+  if (l.einmaleins) zeigeEinmaleins(karte, l.einmaleins);
+}
+
+async function ladeLernstand(aenderung) {
+  const kid = $("lp_kind").value;
+  if (!kid) return;
+  lernstandKind = kid; lernstandZeit = Date.now();
+  const { code, daten: d } = aenderung ? await api("/api/lernstand", { kind: kid, ...aenderung })
+    : await api(`/api/lernstand?kind=${encodeURIComponent(kid)}`);
+  if (code !== 200) { toast(d.fehler || "Lernstand nicht ladbar.", "fehler"); return; }
+  lernstand = d;
+  zeigeLernstand();
+}
+
+function zelle(zeile, text, klasse) {
+  const td = document.createElement("td");
+  td.textContent = text;
+  if (klasse) td.className = klasse;
+  zeile.append(td);
+  return td;
+}
+
+function zeigeLernstandWahl(l) {
+  const th = $("lp_thema"), nv = $("lp_niveau");
+  if (th.options.length !== l.themen.length + 1) {
+    th.innerHTML = "";
+    th.add(new Option("Gemischt", ""));
+    for (const x of l.themen) th.add(new Option(x.name, x.name));
+  }
+  if (!nv.options.length) for (const n of l.niveaus) nv.add(new Option(n.charAt(0).toUpperCase() + n.slice(1), n));
+  if (document.activeElement !== th) th.value = l.thema;
+  if (document.activeElement !== nv) nv.value = l.niveau;
+  const liste = $("lp_themen");
+  liste.innerHTML = "";
+  for (const x of l.themen) {
+    const tr = document.createElement("tr");
+    zelle(tr, x.name + (x.name === l.thema ? " (gewählt)" : ""));
+    zelle(tr, `${x.gekonnt} von ${x.eintraege} gekonnt`, "zahl");
+    liste.append(tr);
+  }
+}
+
+$("lp_thema").addEventListener("change", async () => { await ladeLernstand({ aktion: "thema", thema: $("lp_thema").value }); toast("Thema gesetzt."); });
+$("lp_niveau").addEventListener("change", async () => { await ladeLernstand({ aktion: "niveau", niveau: $("lp_niveau").value }); toast("Schwierigkeit gesetzt."); });
+
+function zeigeEinmaleins(karte, e) {
+  const box = document.createElement("details");
+  box.open = true;
+  const titel = document.createElement("summary");
+  titel.textContent = `Einmaleins-Karteikasten: ${e.mal_gekonnt} von 100 Malaufgaben und ${e.geteilt_gekonnt} von 100 Geteilt-Aufgaben sitzen`;
+  box.append(titel);
+  const tabelle = document.createElement("table");
+  tabelle.className = "eins";
+  const kopf = document.createElement("tr");
+  kopf.append(document.createElement("th"));
+  for (let b = 1; b <= 10; b++) { const th = document.createElement("th"); th.textContent = b; kopf.append(th); }
+  tabelle.append(kopf);
+  for (let a = 1; a <= 10; a++) {
+    const tr = document.createElement("tr");
+    const th = document.createElement("th"); th.textContent = a; tr.append(th);
+    for (let b = 1; b <= 10; b++) {
+      const td = document.createElement("td");
+      const fach = e.mal[`${a}x${b}`] || 0;
+      td.className = "f" + fach;
+      td.textContent = a * b;
+      td.title = `${a} mal ${b}: ` + (fach ? `Fach ${fach} von 5` : "noch nicht geübt");
+      tr.append(td);
+    }
+    tabelle.append(tr);
+  }
+  const hinweis = document.createElement("p");
+  hinweis.className = "hinweis";
+  hinweis.style.margin = "6px 0 0";
+  hinweis.textContent = "Grau: noch nicht geübt, rot bis grün: Fach 1 bis 5 im Karteikasten (ab Fach 4 sitzt die Aufgabe). Er greift bei den Themen Einmaleins-Kernaufgaben, Alle Einmaleins-Reihen, Einmaleins automatisiert und Geteilt-Aufgaben."
+    + (e.schwierig.length ? ` Oft falsch: ${e.schwierig.map((k) => k.replace("x", " mal ").replace(":", " geteilt durch ")).join(", ")}.` : "");
+  box.append(tabelle, hinweis);
+  karte.append(box);
+}
+
+function zeigeLernstand() {
+  const l = lernstand, s = l.stufen.find((x) => x.stufe === l.stufe);
+  $("lp_stufe").textContent = `${l.stufe} von ${l.hoechste}`;
+  $("lp_stufe_name").textContent = s.name;
+  $("lp_faellig").textContent = l.faellig_heute;
+  $("lp_gekonnt").textContent = `${l.gekonnt} Wörter gekonnt`;
+  zeigeLernstandWahl(l);
+  $("lp_pflicht").textContent = `Pflichtstoff nach LehrplanPLUS Bayern (Wortschatz und Redemittel, Stufe 1 bis 3): ` +
+    `${l.pflicht_gekonnt} von ${l.pflicht} gekonnt.`;
+  const stufen = $("lp_stufen");
+  stufen.innerHTML = "";
+  for (const st of l.stufen) {
+    const div = document.createElement("div");
+    div.className = "feld";
+    div.style.marginBottom = "10px";
+    const titel = document.createElement("div");
+    titel.className = "zeile-klein";
+    titel.style.marginTop = "0";
+    const links = document.createElement("span");
+    links.textContent = `Stufe ${st.stufe}: ${st.name}` + (st.stufe === l.stufe ? " (aktuell)" : "");
+    const rechts = document.createElement("span");
+    rechts.textContent = `${st.gekonnt} von ${st.eintraege} gekonnt`;
+    titel.append(links, rechts);
+    const balken = document.createElement("div");
+    balken.className = "balken";
+    const i = document.createElement("i");
+    i.style.width = `${Math.round((st.gekonnt / st.eintraege) * 100)}%`;
+    balken.append(i);
+    div.append(titel, balken);
+    stufen.append(div);
+  }
+  const wahl = $("lp_stufe_wahl");
+  if (!wahl.options.length) for (const st of l.stufen) wahl.add(new Option(`Stufe ${st.stufe}: ${st.name}`, st.stufe));
+  if (document.activeElement !== wahl) wahl.value = l.stufe;
+
+  const schwierig = $("lp_schwierig");
+  schwierig.innerHTML = "";
+  if (!l.schwierig.length) {
+    const tr = document.createElement("tr");
+    zelle(tr, "Noch keine.");
+    schwierig.append(tr);
+  }
+  for (const c of l.schwierig) {
+    const tr = document.createElement("tr");
+    zelle(tr, c.en); zelle(tr, c.de); zelle(tr, `${c.falsch}× falsch`, "zahl");
+    schwierig.append(tr);
+  }
+  $("lp_alle_titel").textContent = `Alle geübten Wörter (${l.karten.length})`;
+  const karten = $("lp_karten");
+  karten.innerHTML = "";
+  for (const c of l.karten) {
+    const tr = document.createElement("tr");
+    zelle(tr, c.en); zelle(tr, c.de); zelle(tr, c.fach, "zahl");
+    zelle(tr, new Date(c.faellig + "T12:00:00").toLocaleDateString("de-DE", { day: "numeric", month: "numeric" }), "zahl");
+    const knopf = document.createElement("button");
+    knopf.type = "button"; knopf.className = "klein"; knopf.textContent = "Neu";
+    knopf.addEventListener("click", () => ladeLernstand({ aktion: "zuruecksetzen", kennung: c.kennung }));
+    zelle(tr, "", "zahl").append(knopf);
+    karten.append(tr);
+  }
+}
+
+$("lp_kind").addEventListener("change", () => { $("themen_karten").innerHTML = ""; ladeLernstand(); ladeThemen(); ladeAlbum(); });
+$("lp_stufe_setzen").addEventListener("click", async () => {
+  await ladeLernstand({ aktion: "stufe", stufe: Number($("lp_stufe_wahl").value) });
+  toast("Stufe gesetzt.");
+});
+
+// ------------------------------------------------------------------ Wochenbericht
+let wochenZeit = 0;
+
+async function ladeWochenbericht() {
+  if (Date.now() - wochenZeit < 60000) return;  // ändert sich langsam, höchstens einmal pro Minute laden
+  wochenZeit = Date.now();
+  const { code, daten: d } = await api("/api/wochenbericht");
+  if (code !== 200) return;
+  const box = $("wochenbericht");
+  box.innerHTML = "";
+  if (!d.kinder.length) { box.textContent = "Noch kein Kind angelegt."; return; }
+  const quote = (w) => (w.gesamt ? `${w.richtig} von ${w.gesamt} richtig (${Math.round((w.richtig / w.gesamt) * 100)} %)` : "keine Aufgaben");
+  for (const k of d.kinder) {
+    const w = k.woche, v = k.vorwoche;
+    const teil = document.createElement("div");
+    teil.className = "feld";
+    const titel = document.createElement("div");
+    titel.className = "titel";
+    titel.textContent = k.name;  // Namen nie als HTML einsetzen
+    const tabelle = document.createElement("table");
+    const zeilen = [
+      ["Aufgaben", `${quote(w)}`, v.gesamt ? `(${v.gesamt})` : ""],
+      ["Lernzeit", `${w.lern_min} Min. an ${w.lerntage === 1 ? "einem Tag" : w.lerntage + " Tagen"}`, `(${v.lern_min} Min.)`],
+      ["Fächer", Object.entries(w.faecher).map(([f, [r, n]]) => `${f} ${r}/${n}`).join(", ") || "–", ""],
+      ["Tagesziel erreicht", `${w.ziele}× `, `(${v.ziele}×)`],
+      ["Neue Sticker", `${k.sticker}`, ""],
+    ];
+    for (const [a, b, c] of zeilen) {
+      const tr = document.createElement("tr");
+      zelle(tr, a); zelle(tr, b); zelle(tr, c, "zahl");
+      tabelle.append(tr);
+    }
+    teil.append(titel, tabelle);
+    box.append(teil);
+  }
+}
+
+// ------------------------------------------------------------------ Anleitung
+const FACH_NAMEN = { englisch: "Englisch", mathe: "Mathe", deutsch: "Deutsch", hsu: "Heimat- und Sachunterricht" };
+
+function fuelleAnleitung() {
+  const e = daten.einstellungen;
+  const werte = {
+    folge: zahl(e.folge, 0),
+    schlafenszeit: e.schlafenszeit === "aus" ? "ausgeschaltet" : e.schlafenszeit.replace("-", " bis ") + " Uhr",
+    tagesziel: e.tagesziel ? String(e.tagesziel) : "(aus)",
+    geschichte_bis: e.geschichte_bis === "aus" ? "–" : e.geschichte_bis + " Uhr",
+  };
+  document.querySelectorAll("[data-wert]").forEach((el) => (el.textContent = werte[el.dataset.wert]));
+  const zeile = (tbody, links, rechts) => {
+    const tr = document.createElement("tr");
+    zelle(tr, links); zelle(tr, rechts);
+    tbody.append(tr);
+  };
+  const lernen = $("anl_lernen"), alle = $("anl_persoenlichkeiten");
+  lernen.innerHTML = ""; alle.innerHTML = "";
+  for (const p of Object.values(daten.persoenlichkeiten)) {
+    if (p.lernplan || p.spielzeit) {
+      zeile(lernen, p.name, (p.lernplan ? FACH_NAMEN[p.lernplan] + " mit Lernplan" : p.beschreibung || "")
+        + (p.spielzeit ? ", mit Stickern" : ""));
+    }
+    if (p.per_sprache) zeile(alle, p.name, [p.beschreibung, p.woerter.length ? "Wörter: " + p.woerter.join(", ") : ""].filter(Boolean).join(". "));
+  }
+}
+
+function fuelleFormular() {
+  if (ansicht === "anleitung") fuelleAnleitung();
+  if (ansicht === "uebersicht") ladeWochenbericht();
+  fuelleKinder();
+  fuelleLernstandKinder();
+  for (const [name, wert] of Object.entries(daten.einstellungen)) if (!geaendert.has(name)) setzeFeld(name, wert);
+  if (!pers(bearbeitet)) { bearbeitet = daten.aktiv; geaendertP.clear(); }  // anderswo gelöscht
+  fuellePersoenlichkeitsListen();
+  for (const [feld, wert] of Object.entries(pers(bearbeitet))) if (!geaendertP.has(feld)) setzePFeld(feld, wert);
+  zeigeInfos();
+  zeigePromptInfo();
+}
+
+function formWert(name) {
+  if (name === "geschichte_bis") return $("geschichte_an").checked ? ($("geschichte_zeit").value || "20:30") : "aus";
+  if (name === "schlafenszeit") {
+    if (!$("schlaf_an").checked) return "aus";
+    return `${$("schlaf_von").value || "20:00"}-${$("schlaf_bis").value || "07:00"}`;
+  }
+  if ($(name).type === "checkbox") return $(name).checked;
+  const w = $(name).value;
+  return ZAHLFELDER.includes(name) ? Number(w) : w;
+}
+
+function markiere(name) {
+  if (name.startsWith("p_")) geaendertP.add(name.slice(2)); else geaendert.add(name);
+  if (ansicht !== "auswertung") $("leiste").classList.add("sichtbar");
+  zeigeInfos();
+}
+
+function leereFehler(praefix = "") {
+  document.querySelectorAll(`[data-fehler^="${praefix}"]`).forEach((el) => (el.textContent = ""));
+}
+
+$("formular").addEventListener("input", (e) => {
+  if (e.target.closest("[data-kinder]")) return;  // Kinderprofile werden je Zeile gespeichert
+  const id = e.target.id;
+  if (id === "p_auswahl") return;
+  if (PROMPTS.includes(id)) zeigePromptInfo();
+  markiere(id.startsWith("schlaf_") ? "schlafenszeit" : id.startsWith("geschichte_") ? "geschichte_bis" : id);
+});
+$("formular").addEventListener("submit", (e) => e.preventDefault());
+
+$("verwerfen").addEventListener("click", () => {
+  geaendert.clear(); geaendertP.clear(); $("leiste").classList.remove("sichtbar");
+  leereFehler();
+  auswahlStand = "";
+  fuelleFormular();
+});
+
+// Editor auf eine andere Persönlichkeit umstellen, ungespeicherte Änderungen daran vorher bestätigen lassen
+function bearbeite(pid) {
+  if (geaendertP.size && !confirm(`Änderungen an „${pers(bearbeitet).name}“ verwerfen?`)) {
+    $("p_auswahl").value = bearbeitet;
+    return false;
+  }
+  geaendertP.clear(); bearbeitet = pid;
+  leereFehler("p_");
+  $("leiste").classList.toggle("sichtbar", ansicht !== "auswertung" && offen());
+  fuelleFormular();
+  return true;
+}
+$("p_auswahl").addEventListener("change", () => bearbeite($("p_auswahl").value));
+
+$("p_neu").addEventListener("click", async () => {
+  const vorlage = pers(bearbeitet).name;
+  const name = (prompt(`Name der neuen Persönlichkeit (Kopie von „${vorlage}“):`) || "").trim();
+  if (!name) return;
+  const { code, daten: d } = await api("/api/persoenlichkeit", { aktion: "neu", vorlage: bearbeitet, name });
+  if (code !== 200) { toast(d.fehler || "Anlegen nicht möglich.", "fehler"); return; }
+  await aktualisieren();
+  if (bearbeite(d.id)) toast(`„${name}“ angelegt als Kopie von „${vorlage}“.`);
+});
+
+$("p_loeschen").addEventListener("click", async () => {
+  const p = pers(bearbeitet), aktiv = bearbeitet === daten.aktiv;
+  if (!confirm(`„${p.name}“ endgültig löschen?` + (aktiv ? " Pixel wird dann wieder aktiv." : ""))) return;
+  const { code, daten: d } = await api("/api/persoenlichkeit", { aktion: "loeschen", id: bearbeitet });
+  if (code !== 200) { toast(d.fehler || "Löschen nicht möglich.", "fehler"); return; }
+  geaendertP.clear(); bearbeitet = "pixel";
+  $("leiste").classList.toggle("sichtbar", ansicht !== "auswertung" && offen());
+  toast(`„${p.name}“ gelöscht.`);
+  await aktualisieren();
+});
+
+$("speichern").addEventListener("click", async () => {
+  leereFehler();
+  let fehler = 0, gespeichert = 0;
+  const zeigeFehler = (liste, praefix) => {
+    for (const [name, text] of Object.entries(liste || {})) {
+      const el = document.querySelector(`[data-fehler="${praefix}${name}"]`);
+      if (el) el.textContent = text;
+      fehler++;
+    }
+  };
+  if (geaendertP.size) {
+    const werte = {};
+    for (const feld of geaendertP) werte[feld] = pWert(feld);
+    const { code, daten: d } = await api("/api/persoenlichkeit", { aktion: "speichern", id: bearbeitet, werte });
+    if (typeof d.fehler === "string") {  // z. B. inzwischen gelöscht
+      toast(d.fehler, "fehler"); geaendertP.clear(); fehler++;
+    } else {
+      gespeichert += d.gespeichert.length;
+      zeigeFehler(d.fehler, "p_");
+      if (code === 200) geaendertP.clear(); else d.gespeichert.forEach((f) => geaendertP.delete(f));
+    }
+  }
+  if (geaendert.size) {
+    const neu = {};
+    for (const name of geaendert) neu[name] = formWert(name);
+    const { code, daten: d } = await api("/api/einstellungen", neu);
+    gespeichert += d.gespeichert.length;
+    zeigeFehler(d.fehler, "");
+    if (code === 200) geaendert.clear(); else d.gespeichert.forEach((n) => geaendert.delete(n));
+  }
+  if (!fehler) toast(gespeichert ? "Gespeichert. Gilt ab der nächsten Frage." : "Keine Änderungen.");
+  else if (!document.querySelector("#toast.fehler:not(.versteckt)")) toast("Nicht alles gespeichert, bitte Eingaben prüfen.", "fehler");
+  $("leiste").classList.toggle("sichtbar", offen());
+  await aktualisieren();
+});
+
+async function aktualisieren() {
+  try {
+    const { daten: d } = await api("/api/zustand");
+    const stimmenNeu = !daten || d.stimmen.length !== daten.stimmen.length;
+    daten = d;
+    if (bearbeitet == null) bearbeitet = daten.aktiv;
+    if (stimmenNeu) {
+      const felder = ["p_modell", "p_stimme", "p_modell_geschichte", "p_stimme_geschichte", "p_stimme_englisch", "wakeword"];
+      const merke = Object.fromEntries(felder.map((f) => [f, $(f).value]));
+      fuelleAuswahl();
+      for (const f of felder) if (geaendert.has(f) || geaendertP.has(f.slice(2))) $(f).value = merke[f];
+    }
+    fuelleFormular();
+    zeigeStatus();
+  } catch (fehler) {
+    if (fehler.message !== "abgemeldet") $("zustand").textContent = "Keine Verbindung";
+  }
+}
+
+async function laden() {
+  $("seite").classList.remove("versteckt");
+  if (offen()) $("leiste").classList.add("sichtbar");
+  await aktualisieren();
+}
+
+// ------------------------------------------------------------------ Hörprobe
+// Die Probe wird direkt als <audio src> geladen: So erlaubt auch das iPhone das Abspielen nach dem Antippen.
+const probeAudio = $("probe_audio");
+let probeFeld = null;
+
+function probeText(feld, text) {
+  document.querySelectorAll("[data-probe-text]").forEach((el) => (el.textContent = ""));
+  if (feld) document.querySelector(`[data-probe-text="${feld}"]`).textContent = text;
+}
+
+document.querySelectorAll("[data-probe]").forEach((knopf) => knopf.addEventListener("click", () => {
+  const feld = knopf.dataset.probe;
+  if (probeFeld === feld && !probeAudio.paused) { probeAudio.pause(); probeText(null); probeFeld = null; return; }
+  const kennung = $(feld).value || $("p_stimme").value;  // Geschichte "wie im Gespräch"
+  probeFeld = feld;
+  probeText(feld, "Wird geladen …");
+  probeAudio.src = `/api/probe?stimme=${encodeURIComponent(kennung)}`;
+  probeAudio.play().catch(() => {});
+}));
+probeAudio.addEventListener("playing", () => probeFeld && probeText(probeFeld, "Spielt · nochmal tippen zum Stoppen"));
+probeAudio.addEventListener("ended", () => { probeText(null); probeFeld = null; });
+probeAudio.addEventListener("error", async () => {
+  if (!probeFeld) return;
+  const feld = probeFeld; probeFeld = null;
+  let text = "Hörprobe nicht möglich.";
+  try { const r = await fetch(probeAudio.src); const d = await r.json(); if (d.fehler) text = d.fehler; } catch (e) { /* bleibt allgemein */ }
+  probeText(feld, text);
+});
+
+// ------------------------------------------------------------------ Auswertung
+let ansicht = "uebersicht", zeitraum = 14, auswertung = null, aktiveSaeule = null;
+const REIHEN = [["claude", "Claude", "--reihe-1"], ["deepgram", "Spracherkennung", "--reihe-2"], ["tts", "Stimme", "--reihe-3"]];
+const WARTETEILE = [["pause_s", "Sprechpause", "--reihe-1"], ["stt_s", "Erkennung", "--reihe-2"],
+  ["claude_erster_satz_s", "Claude", "--reihe-3"], ["tts_erster_satz_s", "Stimme", "--reihe-4"]];
+const cent = (w, s = 2) => (w == null ? "–" : zahl(w, s) + " ct");
+const datum = (iso, mitTag) => { const d = new Date(iso + "T12:00:00");
+  return d.toLocaleDateString("de-DE", mitTag ? { weekday: "short", day: "numeric", month: "numeric" } : { day: "numeric", month: "numeric" }); };
+
+const TABS = ["uebersicht", "profile", "lernen", "persoenlichkeiten", "einstellungen", "auswertung", "anleitung"];
+
+function zeigeAnsicht(name) {
+  if (!TABS.includes(name)) name = "uebersicht";
+  ansicht = name;
+  $("bereich_uebersicht").classList.toggle("versteckt", name === "auswertung");
+  $("bereich_auswertung").classList.toggle("versteckt", name !== "auswertung");
+  document.querySelectorAll("[data-tab]").forEach((el) => el.classList.toggle("versteckt", !el.dataset.tab.split(" ").includes(name)));
+  document.querySelectorAll("[data-ansicht]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.ansicht === name));
+  $("leiste").classList.toggle("sichtbar", name !== "auswertung" && offen());
+  try { localStorage.setItem("pixel_tab", name); } catch (e) { /* ohne Speicher: immer Übersicht */ }
+  if (name === "auswertung") ladeAuswertung();
+  if (name === "lernen" && daten) { lernstandZeit = 0; fuelleLernstandKinder(); }
+  if (name === "anleitung" && daten) fuelleAnleitung();
+}
+document.querySelectorAll("[data-ansicht]").forEach((b) => b.addEventListener("click", () => zeigeAnsicht(b.dataset.ansicht)));
+{
+  let gemerkt = "uebersicht";
+  try { gemerkt = localStorage.getItem("pixel_tab") || gemerkt; } catch (e) { /* bleibt Übersicht */ }
+  zeigeAnsicht(gemerkt === "auswertung" ? "uebersicht" : gemerkt);
+}
+document.querySelectorAll("[data-tage]").forEach((b) => b.addEventListener("click", () => {
+  zeitraum = Number(b.dataset.tage);
+  document.querySelectorAll("[data-tage]").forEach((x) => x.setAttribute("aria-pressed", x === b));
+  aktiveSaeule = null; ladeAuswertung();
+}));
+
+async function ladeAuswertung() {
+  try { auswertung = (await api(`/api/auswertung?tage=${zeitraum}`)).daten; zeigeAuswertung(); } catch (e) { /* abgemeldet */ }
+}
+
+function tagesInfo(t) {
+  const teile = REIHEN.map(([k, name]) => `${name} ${cent(t[k], 3)}`);
+  return `${datum(t.tag, true)}: ${cent(t.claude + t.deepgram + t.tts, 3)} · ${t.fragen} ${t.fragen === 1 ? "Frage" : "Fragen"}<br>` + teile.join(" · ");
+}
+
+function zeigeAuswertung() {
+  const a = auswertung;
+  $("a_kosten").textContent = cent(a.zeitraum.kosten_cent);
+  $("a_fragen").textContent = `${a.zeitraum.fragen} Fragen`;
+  $("a_proFrage").textContent = cent(a.zeitraum.pro_frage_cent, 3);
+  $("a_monat").textContent = cent(a.monat.kosten_cent);
+  $("a_monatFragen").textContent = `${a.monat.fragen} Fragen`;
+  $("a_hochrechnung").textContent = cent(a.monat.hochrechnung_cent);
+
+  // Kosten pro Tag: gestapelte Säulen, Skala mit runder Obergrenze
+  const summen = a.tage.map((t) => t.claude + t.deepgram + t.tts);
+  const max = Math.max(...summen, 0.01);
+  const stufe = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100].find((s) => s * 4 >= max) || max / 4;
+  const oben = Math.ceil(max / stufe) * stufe;
+  const d = $("a_diagramm");
+  d.innerHTML = "";
+  for (let i = 1; i <= Math.round(oben / stufe); i++) {
+    const g = document.createElement("div");
+    g.className = "gitter"; g.style.bottom = (i * stufe / oben) * 100 + "%";
+    if (i === Math.round(oben / stufe)) g.innerHTML = `<span>${cent(i * stufe)}</span>`;
+    d.append(g);
+  }
+  a.tage.forEach((t, i) => {
+    const s = document.createElement("button");
+    s.type = "button"; s.className = "saeule" + (aktiveSaeule === i ? " aktiv" : "");
+    s.setAttribute("aria-label", tagesInfo(t).replace("<br>", ", "));
+    for (const [k, , farbe] of REIHEN) {
+      if (t[k] <= 0) continue;
+      const seg = document.createElement("i");
+      seg.style.height = `calc(${(t[k] / oben) * 100}% - 2px)`; seg.style.background = `var(${farbe})`;
+      seg.style.minHeight = "2px";
+      s.append(seg);
+    }
+    s.addEventListener("click", () => { aktiveSaeule = i; $("a_info").innerHTML = tagesInfo(t); zeigeAuswertung(); });
+    d.append(s);
+  });
+  $("a_achse_von").textContent = datum(a.tage[0].tag);
+  $("a_achse_bis").textContent = "heute";
+  if (aktiveSaeule == null) $("a_info").textContent = summen.some((s) => s > 0) ? "Säule antippen für Details." : "Keine Kosten im Zeitraum.";
+
+  // Wartezeit: Median je Teil als gestapelter Balken
+  const w = a.wartezeit;
+  const stapel = $("a_stapel"), legende = $("a_warten_legende");
+  stapel.innerHTML = ""; legende.innerHTML = "";
+  if (!w.antworten) {
+    $("a_warten_text").textContent = "Noch keine Messungen mit Mikrofon im Zeitraum.";
+  } else {
+    const summe = WARTETEILE.reduce((x, [k]) => x + (w[k] || 0), 0);
+    $("a_warten_text").textContent = `Typisch ${sek(w.warten_s)} bis zum ersten Ton (Median aus ${w.antworten} Antworten). So setzt sich das zusammen:`;
+    for (const [k, name, farbe] of WARTETEILE) {
+      const seg = document.createElement("i");
+      seg.style.flex = String(w[k] || 0); seg.style.background = `var(${farbe})`;
+      seg.title = `${name} ${sek(w[k])}`;
+      stapel.append(seg);
+      const l = document.createElement("span");
+      l.style.setProperty("--farbe", `var(${farbe})`); l.textContent = `${name} ${sek(w[k])}`;
+      legende.append(l);
+    }
+  }
+
+  // Tabellen
+  const zeile = (zellen) => "<tr>" + zellen.map((z, i) => `<td${i ? ' class="zahl"' : ""}>${z}</td>`).join("") + "</tr>";
+  $("a_stimmen").innerHTML = a.stimmen.length ? a.stimmen.map((s) =>
+    zeile([stimmenName(s.kennung), s.messungen, sek(s.tts_s), sek(s.warten_s)])).join("")
+    : zeile(["Noch keine Messungen", "", "", ""]);
+  $("a_modelle").innerHTML = a.modelle.length ? a.modelle.map((m) =>
+    zeile([modellName(m.kennung), m.fragen, sek(m.claude_erster_satz_s), cent(m.kosten_pro_frage_cent, 3)])).join("")
+    : zeile(["Noch keine Fragen", "", "", ""]);
+
+  $("a_f_claude").textContent = a.fehler.claude;
+  $("a_f_deepgram").textContent = a.fehler.deepgram;
+  $("a_f_max").textContent = a.fehler.max_tokens;
+}
+
+setInterval(() => { if (!$("seite").classList.contains("versteckt") && !document.hidden) aktualisieren(); }, 4000);
+laden();
+</script>
+</body>
+</html>

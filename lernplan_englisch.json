@@ -1,0 +1,1737 @@
+{
+ "fach": "Englisch",
+ "quelle": "LehrplanPLUS Grundschule Bayern, Englisch 3/4 (ISB, aktualisierte Fassung): Themengebiete 4.1 bis 4.4, Liste verbindlicher Wortschatz, Liste empfohlener Redemittel. Stufe 4 geht darüber hinaus.",
+ "hinweis": "Britisches Englisch. pflicht = verbindlicher Wortschatz bzw. empfohlene Redemittel. rollenspiel = persönliche Angaben, nur mit erfundenen Personen üben, nie nach echten Daten des Kindes fragen.",
+ "stufen": [
+  {
+   "stufe": 1,
+   "name": "Start",
+   "klassen": "vor Klasse 3 (freiwillig)",
+   "beschreibung": "erste Wörter aus dem Pflichtwortschatz: Begrüßung, Farben, Zahlen bis 10, Tiere, Familie (Englisch beginnt in Bayern in Klasse 3)",
+   "eintraege": [
+    {
+     "en": "hello",
+     "de": "Hallo",
+     "thema": "Begrüßung",
+     "pflicht": true
+    },
+    {
+     "en": "bye",
+     "de": "Tschüss",
+     "thema": "Begrüßung",
+     "pflicht": true,
+     "auch": [
+      "Auf Wiedersehen"
+     ]
+    },
+    {
+     "en": "good morning",
+     "de": "Guten Morgen",
+     "thema": "Begrüßung",
+     "pflicht": true
+    },
+    {
+     "en": "yes",
+     "de": "ja",
+     "thema": "Begrüßung",
+     "pflicht": true
+    },
+    {
+     "en": "no",
+     "de": "nein",
+     "thema": "Begrüßung",
+     "pflicht": true
+    },
+    {
+     "en": "please",
+     "de": "bitte",
+     "thema": "Begrüßung",
+     "pflicht": true
+    },
+    {
+     "en": "thank you",
+     "de": "danke",
+     "thema": "Begrüßung",
+     "pflicht": true,
+     "auch": [
+      "danke schön"
+     ]
+    },
+    {
+     "en": "red",
+     "de": "rot",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "blue",
+     "de": "blau",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "green",
+     "de": "grün",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "yellow",
+     "de": "gelb",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "orange",
+     "de": "orange",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "pink",
+     "de": "rosa",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "brown",
+     "de": "braun",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "black",
+     "de": "schwarz",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "white",
+     "de": "weiß",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "grey",
+     "de": "grau",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "one",
+     "de": "eins",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "two",
+     "de": "zwei",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "three",
+     "de": "drei",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "four",
+     "de": "vier",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "five",
+     "de": "fünf",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "six",
+     "de": "sechs",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "seven",
+     "de": "sieben",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "eight",
+     "de": "acht",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "nine",
+     "de": "neun",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "ten",
+     "de": "zehn",
+     "thema": "Zahlen bis 10",
+     "pflicht": true
+    },
+    {
+     "en": "dog",
+     "de": "Hund",
+     "thema": "Tiere",
+     "pflicht": true
+    },
+    {
+     "en": "cat",
+     "de": "Katze",
+     "thema": "Tiere",
+     "pflicht": true
+    },
+    {
+     "en": "fish",
+     "de": "Fisch",
+     "thema": "Tiere",
+     "pflicht": true
+    },
+    {
+     "en": "horse",
+     "de": "Pferd",
+     "thema": "Tiere",
+     "pflicht": true
+    },
+    {
+     "en": "mouse",
+     "de": "Maus",
+     "thema": "Tiere",
+     "pflicht": true
+    },
+    {
+     "en": "hamster",
+     "de": "Hamster",
+     "thema": "Tiere",
+     "pflicht": true
+    },
+    {
+     "en": "rabbit",
+     "de": "Kaninchen",
+     "thema": "Tiere",
+     "pflicht": true,
+     "auch": [
+      "Hase"
+     ]
+    },
+    {
+     "en": "mother",
+     "de": "Mutter",
+     "thema": "Familie",
+     "pflicht": true,
+     "auch": [
+      "Mama"
+     ]
+    },
+    {
+     "en": "father",
+     "de": "Vater",
+     "thema": "Familie",
+     "pflicht": true,
+     "auch": [
+      "Papa"
+     ]
+    },
+    {
+     "en": "sister",
+     "de": "Schwester",
+     "thema": "Familie",
+     "pflicht": true
+    },
+    {
+     "en": "brother",
+     "de": "Bruder",
+     "thema": "Familie",
+     "pflicht": true
+    },
+    {
+     "en": "family",
+     "de": "Familie",
+     "thema": "Familie",
+     "pflicht": true
+    },
+    {
+     "en": "colour",
+     "de": "Farbe",
+     "thema": "Farben",
+     "pflicht": true
+    },
+    {
+     "en": "What colour is it?",
+     "de": "Welche Farbe hat es?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "How are you?",
+     "de": "Wie geht es dir?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "I'm fine, thanks.",
+     "de": "Mir geht es gut, danke.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "This is my dog.",
+     "de": "Das ist mein Hund.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    }
+   ]
+  },
+  {
+   "stufe": 2,
+   "name": "Klasse 3: Familie, Freunde, Schule",
+   "klassen": "3",
+   "beschreibung": "Lehrplan 4.1 Familie und Freunde, 4.2 Schule: sich vorstellen, Befinden, Schulsachen, wo etwas ist, Uhrzeit, bitten und danken",
+   "eintraege": [
+    {
+     "en": "friend",
+     "de": "Freund",
+     "thema": "Familie und Freunde",
+     "pflicht": true,
+     "auch": [
+      "Freundin"
+     ]
+    },
+    {
+     "en": "boy",
+     "de": "Junge",
+     "thema": "Familie und Freunde",
+     "pflicht": true
+    },
+    {
+     "en": "girl",
+     "de": "Mädchen",
+     "thema": "Familie und Freunde",
+     "pflicht": true
+    },
+    {
+     "en": "pet",
+     "de": "Haustier",
+     "thema": "Familie und Freunde",
+     "pflicht": true
+    },
+    {
+     "en": "house",
+     "de": "Haus",
+     "thema": "Familie und Freunde",
+     "pflicht": true
+    },
+    {
+     "en": "room",
+     "de": "Zimmer",
+     "thema": "Familie und Freunde",
+     "pflicht": true
+    },
+    {
+     "en": "name",
+     "de": "Name",
+     "thema": "Familie und Freunde",
+     "pflicht": true
+    },
+    {
+     "en": "eleven",
+     "de": "elf",
+     "thema": "Zahlen",
+     "pflicht": true
+    },
+    {
+     "en": "twelve",
+     "de": "zwölf",
+     "thema": "Zahlen",
+     "pflicht": true
+    },
+    {
+     "en": "Germany",
+     "de": "Deutschland",
+     "thema": "Länder und Sprachen",
+     "pflicht": true
+    },
+    {
+     "en": "England",
+     "de": "England",
+     "thema": "Länder und Sprachen",
+     "pflicht": true
+    },
+    {
+     "en": "German",
+     "de": "Deutsch",
+     "thema": "Länder und Sprachen",
+     "pflicht": true
+    },
+    {
+     "en": "English",
+     "de": "Englisch",
+     "thema": "Länder und Sprachen",
+     "pflicht": true
+    },
+    {
+     "en": "school",
+     "de": "Schule",
+     "thema": "Schule",
+     "pflicht": true
+    },
+    {
+     "en": "schoolbag",
+     "de": "Schultasche",
+     "thema": "Schule",
+     "pflicht": true,
+     "auch": [
+      "Schulranzen"
+     ]
+    },
+    {
+     "en": "classroom",
+     "de": "Klassenzimmer",
+     "thema": "Schule",
+     "pflicht": true
+    },
+    {
+     "en": "teacher",
+     "de": "Lehrerin",
+     "thema": "Schule",
+     "pflicht": true,
+     "auch": [
+      "Lehrer"
+     ]
+    },
+    {
+     "en": "book",
+     "de": "Buch",
+     "thema": "Schule",
+     "pflicht": true
+    },
+    {
+     "en": "pen",
+     "de": "Kuli",
+     "thema": "Schule",
+     "pflicht": true,
+     "auch": [
+      "Stift",
+      "Füller"
+     ]
+    },
+    {
+     "en": "pencil",
+     "de": "Bleistift",
+     "thema": "Schule",
+     "pflicht": true
+    },
+    {
+     "en": "rubber",
+     "de": "Radiergummi",
+     "thema": "Schule",
+     "pflicht": true
+    },
+    {
+     "en": "board",
+     "de": "Tafel",
+     "thema": "Schule",
+     "pflicht": true
+    },
+    {
+     "en": "chair",
+     "de": "Stuhl",
+     "thema": "Schule",
+     "pflicht": true
+    },
+    {
+     "en": "picture",
+     "de": "Bild",
+     "thema": "Schule",
+     "pflicht": true
+    },
+    {
+     "en": "sports",
+     "de": "Sport",
+     "thema": "Schule",
+     "pflicht": true
+    },
+    {
+     "en": "happy",
+     "de": "fröhlich",
+     "thema": "Gefühle",
+     "pflicht": true,
+     "auch": [
+      "glücklich",
+      "froh"
+     ]
+    },
+    {
+     "en": "sad",
+     "de": "traurig",
+     "thema": "Gefühle",
+     "pflicht": true
+    },
+    {
+     "en": "big",
+     "de": "groß",
+     "thema": "Eigenschaften",
+     "pflicht": true
+    },
+    {
+     "en": "small",
+     "de": "klein",
+     "thema": "Eigenschaften",
+     "pflicht": true
+    },
+    {
+     "en": "little",
+     "de": "klein",
+     "thema": "Eigenschaften",
+     "pflicht": true
+    },
+    {
+     "en": "old",
+     "de": "alt",
+     "thema": "Eigenschaften",
+     "pflicht": true
+    },
+    {
+     "en": "in",
+     "de": "in",
+     "thema": "Wo ist es?",
+     "pflicht": true
+    },
+    {
+     "en": "on",
+     "de": "auf",
+     "thema": "Wo ist es?",
+     "pflicht": true
+    },
+    {
+     "en": "under",
+     "de": "unter",
+     "thema": "Wo ist es?",
+     "pflicht": true
+    },
+    {
+     "en": "behind",
+     "de": "hinter",
+     "thema": "Wo ist es?",
+     "pflicht": true
+    },
+    {
+     "en": "next to",
+     "de": "neben",
+     "thema": "Wo ist es?",
+     "pflicht": true
+    },
+    {
+     "en": "in front of",
+     "de": "vor",
+     "thema": "Wo ist es?",
+     "pflicht": true
+    },
+    {
+     "en": "sorry",
+     "de": "Entschuldigung",
+     "thema": "Höflichkeit",
+     "pflicht": true,
+     "auch": [
+      "tut mir leid"
+     ]
+    },
+    {
+     "en": "great",
+     "de": "toll",
+     "thema": "Gefühle",
+     "pflicht": true,
+     "auch": [
+      "super",
+      "großartig"
+     ]
+    },
+    {
+     "en": "My name is Tom.",
+     "de": "Ich heiße Tom.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true,
+     "rollenspiel": true
+    },
+    {
+     "en": "What's your name?",
+     "de": "Wie heißt du?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true,
+     "rollenspiel": true
+    },
+    {
+     "en": "How old are you?",
+     "de": "Wie alt bist du?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true,
+     "rollenspiel": true
+    },
+    {
+     "en": "Where are you from?",
+     "de": "Woher kommst du?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true,
+     "rollenspiel": true
+    },
+    {
+     "en": "I'm from Germany.",
+     "de": "Ich komme aus Deutschland.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "This is my family.",
+     "de": "Das ist meine Familie.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "I've got a little sister.",
+     "de": "Ich habe eine kleine Schwester.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Who's this?",
+     "de": "Wer ist das?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Have you got a pet?",
+     "de": "Hast du ein Haustier?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "It's black.",
+     "de": "Es ist schwarz.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "This is my room. It's small.",
+     "de": "Das ist mein Zimmer. Es ist klein.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "I'm happy.",
+     "de": "Ich bin fröhlich.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Where is my pen, please?",
+     "de": "Wo ist bitte mein Kuli?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "It's under the chair.",
+     "de": "Er ist unter dem Stuhl.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Sorry, I don't know.",
+     "de": "Tut mir leid, ich weiß es nicht.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "I like English.",
+     "de": "Ich mag Englisch.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "What time is it, please?",
+     "de": "Wie spät ist es, bitte?",
+     "thema": "Uhrzeit",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "It's seven o'clock.",
+     "de": "Es ist sieben Uhr.",
+     "thema": "Uhrzeit",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "It's two thirty.",
+     "de": "Es ist halb drei.",
+     "thema": "Uhrzeit",
+     "typ": "satz",
+     "pflicht": true,
+     "auch": [
+      "Es ist zwei Uhr dreißig"
+     ]
+    },
+    {
+     "en": "Can I have your red pen, please?",
+     "de": "Kann ich bitte deinen roten Kuli haben?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Here you are.",
+     "de": "Bitte schön.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true,
+     "auch": [
+      "Hier, bitte"
+     ]
+    },
+    {
+     "en": "You're welcome.",
+     "de": "Gern geschehen.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Please help me.",
+     "de": "Hilf mir bitte.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    }
+   ]
+  },
+  {
+   "stufe": 3,
+   "name": "Klasse 4: Freizeit, Feste, Einkaufen",
+   "klassen": "4",
+   "beschreibung": "Lehrplan 4.3 Freizeit und Feste, 4.4 Einkaufen: Hobbys, einladen, gratulieren, Essen, Kleidung, einkaufen mit Mengen und Preisen",
+   "eintraege": [
+    {
+     "en": "hobby",
+     "de": "Hobby",
+     "thema": "Freizeit",
+     "pflicht": true
+    },
+    {
+     "en": "football",
+     "de": "Fußball",
+     "thema": "Freizeit",
+     "pflicht": true
+    },
+    {
+     "en": "tennis",
+     "de": "Tennis",
+     "thema": "Freizeit",
+     "pflicht": true
+    },
+    {
+     "en": "swim",
+     "de": "schwimmen",
+     "thema": "Freizeit",
+     "pflicht": true
+    },
+    {
+     "en": "bike",
+     "de": "Fahrrad",
+     "thema": "Freizeit",
+     "pflicht": true,
+     "auch": [
+      "Rad"
+     ]
+    },
+    {
+     "en": "ride a bike",
+     "de": "Fahrrad fahren",
+     "thema": "Freizeit",
+     "pflicht": true
+    },
+    {
+     "en": "play",
+     "de": "spielen",
+     "thema": "Freizeit",
+     "pflicht": true
+    },
+    {
+     "en": "weekend",
+     "de": "Wochenende",
+     "thema": "Freizeit",
+     "pflicht": true
+    },
+    {
+     "en": "party",
+     "de": "Party",
+     "thema": "Feste",
+     "pflicht": true,
+     "auch": [
+      "Feier"
+     ]
+    },
+    {
+     "en": "birthday",
+     "de": "Geburtstag",
+     "thema": "Feste",
+     "pflicht": true
+    },
+    {
+     "en": "Halloween",
+     "de": "Halloween",
+     "thema": "Feste",
+     "pflicht": true
+    },
+    {
+     "en": "apple",
+     "de": "Apfel",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "bread",
+     "de": "Brot",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "butter",
+     "de": "Butter",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "cheese",
+     "de": "Käse",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "chips",
+     "de": "Pommes",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "chocolate",
+     "de": "Schokolade",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "egg",
+     "de": "Ei",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "fruit",
+     "de": "Obst",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "ham",
+     "de": "Schinken",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "plum",
+     "de": "Pflaume",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "salad",
+     "de": "Salat",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "strawberry",
+     "de": "Erdbeere",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "sweets",
+     "de": "Süßigkeiten",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "tea",
+     "de": "Tee",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "tomato",
+     "de": "Tomate",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "water",
+     "de": "Wasser",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "eat",
+     "de": "essen",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "drink",
+     "de": "trinken",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "chicken",
+     "de": "Hähnchen",
+     "thema": "Essen und Trinken",
+     "pflicht": true,
+     "auch": [
+      "Huhn"
+     ]
+    },
+    {
+     "en": "hot",
+     "de": "heiß",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "cold",
+     "de": "kalt",
+     "thema": "Essen und Trinken",
+     "pflicht": true
+    },
+    {
+     "en": "dress",
+     "de": "Kleid",
+     "thema": "Kleidung",
+     "pflicht": true
+    },
+    {
+     "en": "jeans",
+     "de": "Jeans",
+     "thema": "Kleidung",
+     "pflicht": true
+    },
+    {
+     "en": "pullover",
+     "de": "Pullover",
+     "thema": "Kleidung",
+     "pflicht": true
+    },
+    {
+     "en": "shoes",
+     "de": "Schuhe",
+     "thema": "Kleidung",
+     "pflicht": true
+    },
+    {
+     "en": "shirt",
+     "de": "Hemd",
+     "thema": "Kleidung",
+     "pflicht": true,
+     "auch": [
+      "T-Shirt"
+     ]
+    },
+    {
+     "en": "fifteen",
+     "de": "fünfzehn",
+     "thema": "Zahlen und Geld",
+     "pflicht": true
+    },
+    {
+     "en": "thirty",
+     "de": "dreißig",
+     "thema": "Zahlen und Geld",
+     "pflicht": true
+    },
+    {
+     "en": "forty-five",
+     "de": "fünfundvierzig",
+     "thema": "Zahlen und Geld",
+     "pflicht": true
+    },
+    {
+     "en": "pound",
+     "de": "Pfund",
+     "thema": "Zahlen und Geld",
+     "pflicht": true
+    },
+    {
+     "en": "euro",
+     "de": "Euro",
+     "thema": "Zahlen und Geld",
+     "pflicht": true
+    },
+    {
+     "en": "dollar",
+     "de": "Dollar",
+     "thema": "Zahlen und Geld",
+     "pflicht": true
+    },
+    {
+     "en": "Can you come to my party?",
+     "de": "Kannst du zu meiner Party kommen?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "No, I'm sorry.",
+     "de": "Nein, tut mir leid.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Happy birthday!",
+     "de": "Alles Gute zum Geburtstag!",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Merry Christmas!",
+     "de": "Frohe Weihnachten!",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "When is your birthday?",
+     "de": "Wann hast du Geburtstag?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true,
+     "rollenspiel": true
+    },
+    {
+     "en": "What's your hobby?",
+     "de": "Was ist dein Hobby?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "My hobby is football.",
+     "de": "Mein Hobby ist Fußball.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "I can swim.",
+     "de": "Ich kann schwimmen.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "I can't play tennis.",
+     "de": "Ich kann nicht Tennis spielen.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Do you like chocolate?",
+     "de": "Magst du Schokolade?",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Yes, I do.",
+     "de": "Ja, mag ich.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true,
+     "auch": [
+      "Ja"
+     ]
+    },
+    {
+     "en": "No, I don't.",
+     "de": "Nein, mag ich nicht.",
+     "thema": "Sätze",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Can I help you?",
+     "de": "Kann ich dir helfen?",
+     "thema": "Einkaufen",
+     "typ": "satz",
+     "pflicht": true,
+     "auch": [
+      "Kann ich Ihnen helfen"
+     ]
+    },
+    {
+     "en": "I'd like an apple, please.",
+     "de": "Ich hätte gern einen Apfel, bitte.",
+     "thema": "Einkaufen",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "How many apples?",
+     "de": "Wie viele Äpfel?",
+     "thema": "Einkaufen",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "Two, please.",
+     "de": "Zwei, bitte.",
+     "thema": "Einkaufen",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "How much is it?",
+     "de": "Wie viel kostet das?",
+     "thema": "Einkaufen",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "It's eight pounds.",
+     "de": "Es kostet acht Pfund.",
+     "thema": "Einkaufen",
+     "typ": "satz",
+     "pflicht": true
+    },
+    {
+     "en": "It's five forty-five.",
+     "de": "Es ist Viertel vor sechs.",
+     "thema": "Uhrzeit",
+     "typ": "satz",
+     "pflicht": true,
+     "auch": [
+      "Es ist fünf Uhr fünfundvierzig"
+     ]
+    }
+   ]
+  },
+  {
+   "stufe": 4,
+   "name": "Extra",
+   "klassen": "über den Pflichtwortschatz hinaus",
+   "beschreibung": "zusätzliche Wörter (Körper, Wetter, Wochentage, Monate, Zahlen bis 100) und Ausblick Klasse 5 (-ing-Form)",
+   "eintraege": [
+    {
+     "en": "purple",
+     "de": "lila",
+     "thema": "Farben"
+    },
+    {
+     "en": "good night",
+     "de": "Gute Nacht",
+     "thema": "Begrüßung"
+    },
+    {
+     "en": "mum",
+     "de": "Mama",
+     "thema": "Familie"
+    },
+    {
+     "en": "dad",
+     "de": "Papa",
+     "thema": "Familie"
+    },
+    {
+     "en": "grandma",
+     "de": "Oma",
+     "thema": "Familie"
+    },
+    {
+     "en": "grandpa",
+     "de": "Opa",
+     "thema": "Familie"
+    },
+    {
+     "en": "baby",
+     "de": "Baby",
+     "thema": "Familie"
+    },
+    {
+     "en": "bird",
+     "de": "Vogel",
+     "thema": "Tiere"
+    },
+    {
+     "en": "cow",
+     "de": "Kuh",
+     "thema": "Tiere"
+    },
+    {
+     "en": "pig",
+     "de": "Schwein",
+     "thema": "Tiere"
+    },
+    {
+     "en": "sheep",
+     "de": "Schaf",
+     "thema": "Tiere"
+    },
+    {
+     "en": "duck",
+     "de": "Ente",
+     "thema": "Tiere"
+    },
+    {
+     "en": "head",
+     "de": "Kopf",
+     "thema": "Körper"
+    },
+    {
+     "en": "eye",
+     "de": "Auge",
+     "thema": "Körper"
+    },
+    {
+     "en": "ear",
+     "de": "Ohr",
+     "thema": "Körper"
+    },
+    {
+     "en": "nose",
+     "de": "Nase",
+     "thema": "Körper"
+    },
+    {
+     "en": "mouth",
+     "de": "Mund",
+     "thema": "Körper"
+    },
+    {
+     "en": "hair",
+     "de": "Haare",
+     "thema": "Körper"
+    },
+    {
+     "en": "hand",
+     "de": "Hand",
+     "thema": "Körper"
+    },
+    {
+     "en": "arm",
+     "de": "Arm",
+     "thema": "Körper"
+    },
+    {
+     "en": "leg",
+     "de": "Bein",
+     "thema": "Körper"
+    },
+    {
+     "en": "foot",
+     "de": "Fuß",
+     "thema": "Körper"
+    },
+    {
+     "en": "T-shirt",
+     "de": "T-Shirt",
+     "thema": "Kleidung"
+    },
+    {
+     "en": "trousers",
+     "de": "Hose",
+     "thema": "Kleidung"
+    },
+    {
+     "en": "skirt",
+     "de": "Rock",
+     "thema": "Kleidung"
+    },
+    {
+     "en": "socks",
+     "de": "Socken",
+     "thema": "Kleidung"
+    },
+    {
+     "en": "jacket",
+     "de": "Jacke",
+     "thema": "Kleidung"
+    },
+    {
+     "en": "jumper",
+     "de": "Pullover",
+     "thema": "Kleidung",
+     "auch": [
+      "Pulli"
+     ]
+    },
+    {
+     "en": "hat",
+     "de": "Mütze",
+     "thema": "Kleidung",
+     "auch": [
+      "Hut"
+     ]
+    },
+    {
+     "en": "banana",
+     "de": "Banane",
+     "thema": "Essen"
+    },
+    {
+     "en": "milk",
+     "de": "Milch",
+     "thema": "Essen"
+    },
+    {
+     "en": "juice",
+     "de": "Saft",
+     "thema": "Essen"
+    },
+    {
+     "en": "cake",
+     "de": "Kuchen",
+     "thema": "Essen"
+    },
+    {
+     "en": "carrot",
+     "de": "Karotte",
+     "thema": "Essen"
+    },
+    {
+     "en": "ruler",
+     "de": "Lineal",
+     "thema": "Schule"
+    },
+    {
+     "en": "scissors",
+     "de": "Schere",
+     "thema": "Schule"
+    },
+    {
+     "en": "glue",
+     "de": "Kleber",
+     "thema": "Schule"
+    },
+    {
+     "en": "pencil case",
+     "de": "Federmäppchen",
+     "thema": "Schule",
+     "auch": [
+      "Mäppchen"
+     ]
+    },
+    {
+     "en": "thirteen",
+     "de": "dreizehn",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "fourteen",
+     "de": "vierzehn",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "sixteen",
+     "de": "sechzehn",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "seventeen",
+     "de": "siebzehn",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "eighteen",
+     "de": "achtzehn",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "nineteen",
+     "de": "neunzehn",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "twenty",
+     "de": "zwanzig",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "forty",
+     "de": "vierzig",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "fifty",
+     "de": "fünfzig",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "sixty",
+     "de": "sechzig",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "seventy",
+     "de": "siebzig",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "eighty",
+     "de": "achtzig",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "ninety",
+     "de": "neunzig",
+     "thema": "Zahlen"
+    },
+    {
+     "en": "one hundred",
+     "de": "hundert",
+     "thema": "Zahlen",
+     "auch": [
+      "einhundert"
+     ]
+    },
+    {
+     "en": "Monday",
+     "de": "Montag",
+     "thema": "Wochentage"
+    },
+    {
+     "en": "Tuesday",
+     "de": "Dienstag",
+     "thema": "Wochentage"
+    },
+    {
+     "en": "Wednesday",
+     "de": "Mittwoch",
+     "thema": "Wochentage"
+    },
+    {
+     "en": "Thursday",
+     "de": "Donnerstag",
+     "thema": "Wochentage"
+    },
+    {
+     "en": "Friday",
+     "de": "Freitag",
+     "thema": "Wochentage"
+    },
+    {
+     "en": "Saturday",
+     "de": "Samstag",
+     "thema": "Wochentage"
+    },
+    {
+     "en": "Sunday",
+     "de": "Sonntag",
+     "thema": "Wochentage"
+    },
+    {
+     "en": "January",
+     "de": "Januar",
+     "thema": "Monate"
+    },
+    {
+     "en": "February",
+     "de": "Februar",
+     "thema": "Monate"
+    },
+    {
+     "en": "March",
+     "de": "März",
+     "thema": "Monate"
+    },
+    {
+     "en": "April",
+     "de": "April",
+     "thema": "Monate"
+    },
+    {
+     "en": "May",
+     "de": "Mai",
+     "thema": "Monate"
+    },
+    {
+     "en": "June",
+     "de": "Juni",
+     "thema": "Monate"
+    },
+    {
+     "en": "July",
+     "de": "Juli",
+     "thema": "Monate"
+    },
+    {
+     "en": "August",
+     "de": "August",
+     "thema": "Monate"
+    },
+    {
+     "en": "September",
+     "de": "September",
+     "thema": "Monate"
+    },
+    {
+     "en": "October",
+     "de": "Oktober",
+     "thema": "Monate"
+    },
+    {
+     "en": "November",
+     "de": "November",
+     "thema": "Monate"
+    },
+    {
+     "en": "December",
+     "de": "Dezember",
+     "thema": "Monate"
+    },
+    {
+     "en": "sun",
+     "de": "Sonne",
+     "thema": "Wetter"
+    },
+    {
+     "en": "rain",
+     "de": "Regen",
+     "thema": "Wetter"
+    },
+    {
+     "en": "snow",
+     "de": "Schnee",
+     "thema": "Wetter"
+    },
+    {
+     "en": "wind",
+     "de": "Wind",
+     "thema": "Wetter"
+    },
+    {
+     "en": "cloud",
+     "de": "Wolke",
+     "thema": "Wetter"
+    },
+    {
+     "en": "sunny",
+     "de": "sonnig",
+     "thema": "Wetter"
+    },
+    {
+     "en": "rainy",
+     "de": "regnerisch",
+     "thema": "Wetter"
+    },
+    {
+     "en": "warm",
+     "de": "warm",
+     "thema": "Wetter"
+    },
+    {
+     "en": "read",
+     "de": "lesen",
+     "thema": "Tätigkeiten"
+    },
+    {
+     "en": "sing",
+     "de": "singen",
+     "thema": "Tätigkeiten"
+    },
+    {
+     "en": "dance",
+     "de": "tanzen",
+     "thema": "Tätigkeiten"
+    },
+    {
+     "en": "cook",
+     "de": "kochen",
+     "thema": "Tätigkeiten"
+    },
+    {
+     "en": "run",
+     "de": "rennen",
+     "thema": "Tätigkeiten",
+     "auch": [
+      "laufen"
+     ]
+    },
+    {
+     "en": "draw",
+     "de": "malen",
+     "thema": "Tätigkeiten",
+     "auch": [
+      "zeichnen"
+     ]
+    },
+    {
+     "en": "jump",
+     "de": "springen",
+     "thema": "Tätigkeiten",
+     "auch": [
+      "hüpfen"
+     ]
+    },
+    {
+     "en": "kitchen",
+     "de": "Küche",
+     "thema": "Zuhause"
+    },
+    {
+     "en": "bedroom",
+     "de": "Schlafzimmer",
+     "thema": "Zuhause"
+    },
+    {
+     "en": "living room",
+     "de": "Wohnzimmer",
+     "thema": "Zuhause"
+    },
+    {
+     "en": "garden",
+     "de": "Garten",
+     "thema": "Zuhause"
+    },
+    {
+     "en": "door",
+     "de": "Tür",
+     "thema": "Zuhause"
+    },
+    {
+     "en": "window",
+     "de": "Fenster",
+     "thema": "Zuhause"
+    },
+    {
+     "en": "bathroom",
+     "de": "Badezimmer",
+     "thema": "Zuhause",
+     "auch": [
+      "Bad"
+     ]
+    },
+    {
+     "en": "new",
+     "de": "neu",
+     "thema": "Eigenschaften"
+    },
+    {
+     "en": "fast",
+     "de": "schnell",
+     "thema": "Eigenschaften"
+    },
+    {
+     "en": "slow",
+     "de": "langsam",
+     "thema": "Eigenschaften"
+    },
+    {
+     "en": "hungry",
+     "de": "hungrig",
+     "thema": "Eigenschaften"
+    },
+    {
+     "en": "tired",
+     "de": "müde",
+     "thema": "Eigenschaften"
+    },
+    {
+     "en": "between",
+     "de": "zwischen",
+     "thema": "Eigenschaften"
+    },
+    {
+     "en": "What's the weather like?",
+     "de": "Wie ist das Wetter?",
+     "thema": "Sätze",
+     "typ": "satz"
+    },
+    {
+     "en": "It's sunny and warm.",
+     "de": "Es ist sonnig und warm.",
+     "thema": "Sätze",
+     "typ": "satz"
+    },
+    {
+     "en": "Today is Monday.",
+     "de": "Heute ist Montag.",
+     "thema": "Sätze",
+     "typ": "satz"
+    },
+    {
+     "en": "I am reading.",
+     "de": "Ich lese gerade.",
+     "thema": "Ausblick Klasse 5",
+     "typ": "satz"
+    },
+    {
+     "en": "The dog is sleeping.",
+     "de": "Der Hund schläft gerade.",
+     "thema": "Ausblick Klasse 5",
+     "typ": "satz"
+    },
+    {
+     "en": "We are playing football.",
+     "de": "Wir spielen gerade Fußball.",
+     "thema": "Ausblick Klasse 5",
+     "typ": "satz"
+    },
+    {
+     "en": "What are you doing?",
+     "de": "Was machst du gerade?",
+     "thema": "Ausblick Klasse 5",
+     "typ": "satz"
+    },
+    {
+     "en": "The ball is under the table.",
+     "de": "Der Ball ist unter dem Tisch.",
+     "thema": "Ausblick Klasse 5",
+     "typ": "satz"
+    },
+    {
+     "en": "Let's play a game.",
+     "de": "Lass uns ein Spiel spielen.",
+     "thema": "Ausblick Klasse 5",
+     "typ": "satz"
+    }
+   ]
+  }
+ ]
+}

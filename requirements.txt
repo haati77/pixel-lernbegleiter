@@ -1,0 +1,6 @@
+piper-tts
+sounddevice
+numpy
+requests
+anthropic
+openwakeword==0.4.0
